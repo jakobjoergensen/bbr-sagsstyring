@@ -7,7 +7,7 @@ const sql = require('msnodesqlv8')
 
 const az = process.env['USERPROFILE'].split(path.sep)[2]
 const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
-// const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'az18982'`
+// const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'az18982'`
 
 let mainWindow
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
@@ -23,13 +23,13 @@ app.on('ready', () => {
       mainWindow = new BrowserWindow({
         show: false,
         backgroundColor: '#ffffff',
-        title: 'BBR sagsstyring 2018.5',
+        title: 'BBR-sagsstyring',
         width: 1400,
         height: 1000
       })
 
       // Indlæs html i main window
-      mainWindow.loadFile('renderer/index.html')
+      mainWindow.loadFile(`${__dirname}/index.html`)
       mainWindow.maximize()
       mainWindow.once('ready-to-show', () => {
         mainWindow.show()

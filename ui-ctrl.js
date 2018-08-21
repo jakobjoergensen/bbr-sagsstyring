@@ -1,6 +1,6 @@
 const { listeDef, currentSag } = require('./variables')
-const fs = require('fs')
 let { liste } = require('./variables')
+const fs = require('fs')
 
 const UICtrl = (() => {
 
@@ -420,7 +420,13 @@ const UICtrl = (() => {
     loadPageSettings: async () => {
       const contentArea = document.getElementById('data-content')
 
-      await fs.readFile('renderer/settings.html', 'utf8', (err, content) => {
+      await fs.readFile(`${__dirname}/settings.html`, 'utf8', (err, content) => {
+
+        if (err) {
+          console.log(err)
+          return
+        }
+
         contentArea.innerHTML = content
         
         // Indlæs data

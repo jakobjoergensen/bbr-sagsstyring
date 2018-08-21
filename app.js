@@ -1,19 +1,20 @@
-const { fn } = require('../functions')
+const { fn } = require('./functions')
 const { ipcRenderer } = require('electron')
 
-const { DBCtrl } = require('../db-ctrl')
-const { UIRender } = require('../ui-render')
-const { ItemCtrl } = require('../item-ctrl')
-const { UICtrl } = require('../ui-ctrl')
+const { DBCtrl } = require('./db-ctrl')
+const { UIRender } = require('./ui-render')
+const { ItemCtrl } = require('./item-ctrl')
+const { UICtrl } = require('./ui-ctrl')
 
 
 
 // Objekt der kommmer til at indeholde alle brugere
 // - vi benytter nedenstående brugerobjekt som objekter i objektet
-let bruger = {}
-let brugere = []
+
 let antalBBRnotater = []
 let opfølgningssagerToggle
+let bruger = {}
+let brugere = []
 
 // Definer objektet for den pågældende bruger der er logget ind
 function User(data) {
