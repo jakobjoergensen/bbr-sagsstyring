@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!--Import Google Icon Font-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:800" rel="stylesheet">
+
+  <!--Import materialize.css-->
+  <link rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+
+  <!-- Import egen stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+
+  <!-- <title>BBR sagsstyring</title> -->
+
+</head>
+
+<body>
+  <div id="preloader-overlay"></div>
+  <div id="progress-fixed">
+    <div id="progress-bar">
+    </div>
+  </div>
+
+  <ul id="dropdown-afventende-sager" class="dropdown-content lighten-1">
+    <li>
+      <a href="#!" id="navIkkeTildeltTilladelse" class="white-text waves-effect waves-light"></a>
+    </li>
+    <li>
+      <a href="#!" id="navIkkeTildeltAfsluttet" class="white-text waves-effect waves-light"></a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="#!" id="navOpfølgningsliste" class="white-text waves-effect waves-light"></a>
+    </li>
+  </ul>
+
+  <ul id="dropdown-sager-under-behandling" class="dropdown-content lighten-1">
+    <li>
+      <a href="#!" id="navTildeltTilladelse" class="white-text waves-effect waves-light"></a>
+    </li>
+    <li>
+      <a href="#!" id="navTildeltAfsluttet" class="white-text waves-effect waves-light"></a>
+    </li>
+  </ul>
+
+  
+  <div class="navbar-fixed" id="navbar">
+
+    <nav class="z-depth-1">
+
+      <div class="nav-wrapper">
+
+        
+        <ul>
+          <li>
+            <a href="#!" id="navMineSager" class="white-text waves-effect waves-light">Mine sager</a>
+          </li>
+          <li>
+            <a href="#!" class="dropdown-trigger " data-target="dropdown-sager-under-behandling">Sager under behandling
+              <i class="material-icons right">arrow_drop_down</i>
+            </a>
+          </li>
+          <li>
+            <a href="#!" class="dropdown-trigger" data-target="dropdown-afventende-sager">Afventende sager
+              <i class="material-icons right">arrow_drop_down</i>
+            </a>
+          </li>
+
+          <li class="right margin-right-s">
+            <i class="material-icons" id="expand-options">expand_less</i>
+          </li>
+
+          <li class="right margin-right-s">
+            <i class="material-icons" id="button-settings">settings</i>
+          </li>
+          
+
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  
+  <div id="options-fixed" class="rows show-options">
+
+    <div id="options" class="indigo lighten-5 z-depth-1">
+      <div id="options-wrapper">
+     
+    
+        
+        <!-- Søgeboks -->
+        <div class="card left card-custom">
+          <div class="card-content">
+            <span class="card-title">Søg</span>
+            <div class="input-field">
+              <i class="material-icons prefix">search</i>
+              <input type="text" name="search" id="search" class="validate">
+              <!-- <label for="search">Søg</label> -->
+            </div>
+          </div>
+        </div>
+    
+        <!-- Toggle vis/skjul opfølgningssager -->
+        <div class="card card-custom left">
+          <div class="card-content">
+    
+            <span class="card-title">Opfølgningssager</span>
+            <br>
+            <div class="switch" id="opfølgningssagerToggle">
+              <label>
+                Skjul
+                <input type="checkbox">
+                <span class="lever"></span>
+                Vis
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Overfør sager -->
+        <div class="card card-custom right" id="card-overfør-sager">
+          <div class="card-content">
+            <span class="card-title">Overfør sager</span>
+            
+            <div class="input-field left margin-right-s">
+              <label for="overfør-sager-antal">Antal</label>
+              <input type="text" name="overfør-sager-antal" id="overfør-sager-antal" value="">
+            </div>
+          
+            <div class="left margin-right-s">
+              <p>
+              <label>
+                <input name="overfør-sager-type" type="radio" />
+                <span>Tilladelse</span>
+              </label>
+              </p>
+              <p>
+              <label>
+                <input name="overfør-sager-type" type="radio" />
+                <span>Afslutning</span>
+              </label>
+              </p>
+            </div>
+            <div class="right margin-left-s">
+              <button id="overfør-sager" class="btn btn-floating btn-large waves-effect waves-light">
+                <i class="material-icons left">add</i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="data-content" class="show-options"></div>
+
+  <!-- Modal Structure -->
+  <div id="modal-single-view" class="modal modal-fixed-footer">
+    <div class="modal-content">
+
+      <div class="row">
+        <div class="col s9">
+          <!-- ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW -->
+          <div class="row">
+            <div class="col s2">
+              <div class="card">
+                <div class="card-content">
+
+                  <!-- Sagsnummer -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Sagsnummer</div>
+                    <span id="sagsnummer"></span>
+                  </div>
+
+                  <!-- ESDH -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">ESDH</div>
+                    <span id="esdh"></span>
+                  </div>
+
+                  <!-- Ejendomsnummer -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Ejendomsnummer</div>
+                    <span id="ejendomsnummer"></span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col s2">
+              <div class="card">
+                <div class="card-content">
+
+                  <!-- Modtagelsesdato -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Modtagelsesdato</div>
+                    <span id="dato-modtaget"></span>
+                  </div>
+
+                  <!-- Afgørelsesdato -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Afgørelsesdato</div>
+                    <span id="dato-afgørelse"></span>
+                  </div>
+
+                  <!-- Afslutningsdato -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Afslutningsdato</div>
+                    <span id="dato-afsluttet"></span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col s4">
+              <div class="card">
+                <div class="card-content">
+
+                  <!-- Adresse -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Adresse</div>
+                    <span id="adresse"></span>
+                  </div>
+
+                  <!-- Sagsindhold -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Sagsindhold</div>
+                    <span id="sagsindhold"></span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col s4">
+              <div class="card">
+                <div class="card-content">
+
+                  <!-- Sagsart -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Sagsart</div>
+                    <span id="sagsart"></span>
+                  </div>
+
+                  <!-- Politisk Kategori -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Politisk kategori</div>
+                    <span id="politisk-kategori"></span>
+                  </div>
+
+                  <!-- Sagsbehandler -->
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Sagsbehandler</div>
+                    <span id="sagsbehandler"></span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+
+
+          </div>
+
+
+          <!-- ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW ROW -->
+          <div class="row">
+
+            <!-- Notater fra BBR -->
+            <div class="col s12">
+              <div class="card">
+                <div class="card-content">
+
+
+                  <div class="box">
+                    <div class="small box-label blue-text text-darken-4">Notater fra BBR</div>
+                    <table>
+                      <thead>
+                        <th>Dato</th>
+                        <th>Nr.</th>
+                        <th>Entitet/Adresse</th>
+                        <th>Tekst</th>
+                      </thead>
+                      <tbody id="bbrNotater-tbody">
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interne noter -->
+            <div class="col s12">
+              <div class="card" id="card-note">
+                <div class="card-content">
+                  <div class="box input-field">
+
+                    <div class="box-label blue-text text-darken-4">Note</div>
+                    <textarea id="note" class="materialize-textarea"></textarea>
+                    <div class="left small grey-text">
+                      <span id="note-timestamp"></span>
+                      <span id="note-brugernavn"></span>
+                    </div>
+                    <button id="gem-note" class="btn btn-small green right waves-effect waves-light tooltipped" data-position="bottom" data-tooltip="Gem note">
+                      <i class="material-icons center tiny">save</i>
+                    </button>
+                    <div class="clearfix"></div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col s3">
+
+
+
+
+          <div class="row">
+            <div class="col s12">
+              <div class="card" id="card-hvem-har-sagen">
+                <div class="card-content">
+                  <div class="box input-field">
+
+                    <div class="box-label blue-text text-darken-4">Hvem har sagen?</div>
+
+                    <select id="hvem-har-sagen">
+                      <option value="tom"></option>
+                    </select>
+
+
+                    <button id="hvem-har-sagen-remove-button" class="btn btn-small red waves-effect waves-light tooltipped" data-position="bottom"
+                      data-tooltip="Læg sagen tilbage til gruppen">
+                      <i class="material-icons tiny center">group</i>
+                    </button>
+                    <button id="hvem-har-sagen-save-button" class="btn btn-small right green waves-effect waves-light tooltipped" data-position="bottom"
+                      data-tooltip="Overfør sagen til kollega">
+                      <i class="material-icons tiny center">save</i>
+                    </button>
+
+                    <div class="clearfix"></div>
+                    <div class="left small grey-text margin-top-s">
+                      <span id="hvem-har-sagen-timestamp"></span>
+                      <span id="hvem-har-sagen-brugernavn"></span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Færdigbehandling af tilladelsessag -->
+          <div class="row">
+            <div class="col s12">
+              <div class="card" id="card-færdigbehandling-tilladelse">
+                <div class="card-content">
+                  <div class="box">
+
+                    <div class="box-label blue-text text-darken-4">
+                      <b>Tilladelsessag</b> færdigbehandlet</div>
+                    <br>
+                    <label class="tooltipped" data-position="bottom" data-tooltip="Angiv færdigbehandling af tilladelsessag">
+                      <input type="checkbox" id="færdigbehandling-tilladelsessag" class="filled-in checkbox-blue">
+                      <span class="checkbox-label small" id="færdigbehandlet-tilladelsessag-label"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Færdigbehandling af afslutningssag -->
+          <div class="row">
+            <div class="col s12">
+              <div class="card" id="card-færdigbehandling-afslutning">
+                <div class="card-content">
+                  <div class="box">
+
+                    <div class="box-label blue-text text-darken-4">
+                      <b>Afslutningssag</b> færdigbehandlet</div>
+                    <br>
+                    <label class="tooltipped" data-position="bottom" data-tooltip="Angiv færdigbehandling af afslutningssag">
+                      <input type="checkbox" id="færdigbehandling-afslutningssag" class="filled-in checkbox-blue">
+                      <span class="checkbox-label small" id="færdigbehandlet-afslutningssag-label"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col s12">
+              <div class="card">
+                <div class="card-content">
+                  <div id="markering" class="box tooltipped" data-tooltip="Markeringen kan ikke ses af andre">
+                    <div class="box-label blue-text text-darken-4">
+                      Markering
+                      <br>
+                    </div>
+                    <label>
+                      <input class="radio-black with-gap" type="radio" name="color" value="null">
+                      <span></span>
+                    </label>
+                    <label>
+                      <input class="radio-blue" type="radio" name="color" value="1">
+                      <span></span>
+                    </label>
+                    <label>
+                      <input class="radio-green" type="radio" name="color" value="2">
+                      <span></span>
+                    </label>
+                    <label>
+                      <input class="radio-yellow" type="radio" name="color" value="3">
+                      <span></span>
+                    </label>
+                    <label>
+                      <input class="radio-red" type="radio" name="color" value="4">
+                      <span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+    <div class="modal-footer">
+      <button id="modal-close" class="modal-close waves-effect waves-light btn blue">Luk</button>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="css/materialize/js/materialize.min.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+
+
+</body>
+
+</html>

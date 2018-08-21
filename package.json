@@ -1,0 +1,38 @@
+{
+  "name": "bbr-sagsstyring-app",
+  "version": "2018.5.0",
+  "description": "",
+  "author": "Jakob Jørgensen, Aarhus Kommune",
+  "main": "main.js",
+  "dependencies": {
+    "dateformat": "^3.0.3",
+    "escape-string-regexp": "^1.0.5",
+    "msnodesqlv8": "^0.6.6",
+    "mssql": "^4.1.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^20.28.1",
+    "electron": "^2.0.3",
+    "electron-reload": "^1.2.5"
+  },
+  "scripts": {
+    "start": "electron .",
+    "build-windows": "electron-builder -w",
+    "make-cert": "electron-builder create-self-signed-cert -p jakobjorgensen"
+  },
+  "build": {
+    "appId": "dk.aarhus.bbrsagsstyring",
+    "productName": "BBR sagsstyring",
+    "copyright": "Copyright © 2018 Aarhus Kommune",
+    "directories": {
+      "buildResources": "."
+    },
+
+    "win": {
+      "certificateFile": "private/jakobjorgensen.pfx",
+      "verifyUpdateCodeSignature": false,
+      "publisherName": "aarhuskommune"
+    }
+  },
+  "license": "ISC"
+}
