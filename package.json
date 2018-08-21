@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "electron .",
-    "build-windows": "electron-builder -w",
+    "build": "electron-builder -w",
     "make-cert": "electron-builder create-self-signed-cert -p jakobjorgensen"
   },
   "build": {
@@ -31,7 +31,7 @@
     "win": {
       "certificateFile": "private/jakobjorgensen.pfx",
       "verifyUpdateCodeSignature": false,
-      "publisherName": "aarhuskommune"
+      "publisherName": "jakobjorgensen"
     }
   },
   "license": "ISC"
