@@ -1,10 +1,10 @@
 const { app, Menu, BrowserWindow, ipcMain, dialog } = require('electron')
+const updater = require('./updater')
 const { SQLConfig } = require('./sql-config')
 const path = require('path')
 const sql = require('msnodesqlv8')
 
-// auto reload
-// require('electron-reload')(__dirname)
+
 const az = process.env['USERPROFILE'].split(path.sep)[2]
 const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
 // const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'az18982'`
@@ -19,6 +19,7 @@ app.on('ready', () => {
     
     if (rows.length > 0) {
 
+      // create main window
       mainWindow = new BrowserWindow({
         show: false,
         backgroundColor: '#ffffff',
@@ -27,14 +28,18 @@ app.on('ready', () => {
         height: 1000
       })
 
+      // Indlæs html i main window
       mainWindow.loadFile('renderer/index.html')
       mainWindow.maximize()
       mainWindow.once('ready-to-show', () => {
         mainWindow.show()
       })
       
+      // Sæt programmenuen
       Menu.setApplicationMenu(mainMenu)
 
+      // Check for updates
+      setTimeout(updater.check, 2000)
     } else {
 
       // bruger ikke registreret i databasen

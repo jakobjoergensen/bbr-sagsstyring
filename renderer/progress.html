@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  <title>Downloader opdatering</title>
+</head>
+<body>
+  <progress id="progress" style="width: 100%" value="0" max="100"></progress>
+
+  <script>
+    // Require IPC
+    const { ipcRenderer } = require('electron')
+
+    // Request progress every ½ second
+    setInterval(() => {
+      let progress = ipcRenderer.sendSync('download-progress-request')
+      document.getElementById('progress').value = progress
+    }, 500)
+  </script>
+</body>
+</html>
