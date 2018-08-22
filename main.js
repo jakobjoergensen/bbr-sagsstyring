@@ -25,7 +25,10 @@ app.on('ready', () => {
         backgroundColor: '#ffffff',
         title: 'BBR-sagsstyring',
         width: 1400,
-        height: 1000
+        height: 1000,
+        webPreferences: {
+          devTools: false
+        }
       })
 
       // Indlæs html i main window
@@ -40,6 +43,13 @@ app.on('ready', () => {
 
       // Check for updates
       setTimeout(updater.check, 2000)
+
+
+      // Håndter luk
+      mainWindow.on('closed', () => {
+        mainWindow = null
+      })
+
     } else {
 
       // bruger ikke registreret i databasen
@@ -76,8 +86,3 @@ ipcMain.on('get:antalBBRnotater', e => {
     e.returnValue = rows
   })
 })
-
-
-function test() {
-  console.log('test')
-}
