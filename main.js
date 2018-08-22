@@ -12,7 +12,12 @@ const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
 let mainWindow
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
 
+// Luk ordentlig ned
+app.on('window-all-closed', () => {
+  app.quit()
+})
 
+// START
 app.on('ready', () => {
 
   sql.query(SQLConfig.connectionString, loadUserQuery, (err, rows) => {
@@ -43,12 +48,6 @@ app.on('ready', () => {
 
       // Check for updates
       setTimeout(updater.check, 2000)
-
-
-      // Håndter luk
-      mainWindow.on('closed', () => {
-        mainWindow = null
-      })
 
     } else {
 

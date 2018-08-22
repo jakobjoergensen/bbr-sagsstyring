@@ -12,7 +12,7 @@ autoUpdater.autoDownload = false
 // Check for updates
 exports.check = () => {
 
-  /*
+  
   // Start update check
   autoUpdater.checkForUpdates()
 
@@ -85,5 +85,4 @@ exports.check = () => {
       })
     })
   })
-  */
 }
