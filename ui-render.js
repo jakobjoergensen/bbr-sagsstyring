@@ -159,8 +159,6 @@ const UIRender = {
 
   // render sagsliste
   renderListView: () => {
-
-    console.log(liste.items)
     
     // table row colors (markering)
     const colors = ['', 'blue', 'light-green', 'amber', 'red']

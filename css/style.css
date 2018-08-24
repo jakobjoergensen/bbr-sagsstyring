@@ -1,10 +1,10 @@
 body {
   font-size: 12px
 }
+
 table {
   font-size: 13px;
 }
-
 
 a.btn {
   margin-top: 5px;
@@ -387,7 +387,8 @@ h4 {
 }
 
 #expand-options:hover,
-#button-settings:hover {
+#button-settings:hover,
+#button-dashboard:hover {
   cursor: pointer;
 }
 
@@ -401,4 +402,13 @@ h4 {
 
 .mono {
   font-family: monospace
+}
+
+.dashboard {
+  font-size: 14px;
+}
+
+.norow-space {
+  margin: 0;
+  padding:0
 }

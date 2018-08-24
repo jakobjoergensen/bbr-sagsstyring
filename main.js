@@ -6,8 +6,8 @@ const sql = require('msnodesqlv8')
 
 
 const az = process.env['USERPROFILE'].split(path.sep)[2]
-const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
-// const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'az18982'`
+// const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
+const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'az18982'`
 
 let mainWindow
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
@@ -32,12 +32,13 @@ app.on('ready', () => {
         width: 1400,
         height: 1000,
         webPreferences: {
-          devTools: false
+          //devTools: false
+          devTools: true
         }
       })
 
       // Indlæs html i main window
-      mainWindow.loadFile(`${__dirname}/index.html`)
+      mainWindow.loadFile(`${__dirname}/renderer/index.html`)
       mainWindow.maximize()
       mainWindow.once('ready-to-show', () => {
         mainWindow.show()

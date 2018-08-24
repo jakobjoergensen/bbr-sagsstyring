@@ -40,7 +40,7 @@ exports.check = () => {
       // Create progress window
       let progressWindow = new BrowserWindow({
         width: 350,
-        height: 35,
+        height: 45,
         useContentSize: true,
         autoHideMenuBar: true,
         maximizable: false,

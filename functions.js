@@ -80,7 +80,9 @@ const fn = (() => {
     },
 
 
-    datoConvert: dateValue => dateFormat(dateValue, 'dd-mm-yyyy'),
+    datoConvert: (dateValue, format ='dd-mm-yyyy') => {
+      return dateFormat(dateValue, format)
+    },
 
     saveHighlight(element, toastTekst = null) {
 
@@ -101,9 +103,36 @@ const fn = (() => {
       }
     },
 
-    getFarvetema: () => colorThemes.find(x => x.id === Number(bruger.settings.farvetema))
-    
+    getFarvetema: () => colorThemes.find(x => x.id === Number(bruger.settings.farvetema)),
+
+    getMonday: () => {
+      const d = new Date()
+      d.setDate(d.getDate() - (d.getDay() + 6) % 7)
+      const day = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+      return day
+    },
+
+    getSunday: () => {
+      const d = new Date()
+      d.setDate(d.getDate() - (d.getDay() + 6) % 7)
+      const day = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 6)
+      return day
+    },
+
+    getFirstDayOfMonth: () => {
+      const d = new Date()
+      const day = new Date(d.getFullYear(), d.getMonth(), 1)
+      return day
+    },
+
+    getLastDayOfMonth: () => {
+      const d = new Date()
+      const day = new Date(d.getFullYear(), d.getMonth() + 1, 0)
+      return day
+    }
   }
+
+  
 })()
 
 

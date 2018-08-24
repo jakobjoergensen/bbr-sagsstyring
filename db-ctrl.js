@@ -273,6 +273,31 @@ const DBCtrl = (() => {
       } catch (err) { console.log(err) }    
     },
 
+    getKPITilladelsessager: async (datoMin, datoMax) => {
+      query = `SELECT *
+              FROM view_kpi_antalFærdigbehandletTilladelseBruger
+              WHERE brugerID = ${bruger.ID}
+              AND datoFærdigbehandletTilladelse >= '${datoMin}'
+              AND datoFærdigbehandletTilladelse <= '${datoMax}'
+              `
+      
+      const rows = await getData(query)
+      return rows
+    },
+
+    getKPIAfslutningssager: async (datoMin, datoMax) => {
+      query = `SELECT *
+              FROM view_kpi_antalFærdigbehandletAfsluttetBruger
+              WHERE brugerID = ${bruger.ID}
+              AND datoFærdigbehandletAfslutning >= '${datoMin}'
+              AND datoFærdigbehandletAfslutning <= '${datoMax}'
+              `
+      
+      const rows = await getData(query)
+      return rows
+    },
+
+
     getBBRNotater: async (sagID) => {
       query = `SELECT
               sagID,

@@ -13,6 +13,11 @@ const UICtrl = (() => {
     await UICtrl.loadPageSettings()
   })
 
+  // Listener for klik på dashboard/home
+  document.getElementById('button-dashboard').addEventListener('click', async () => {
+    await UICtrl.loadDashboard()
+  })
+
   // Listener for overfør sager
   document.getElementById('overfør-sager').addEventListener('click', e => {
     const antal = document.getElementById('overfør-sager-antal').value
@@ -417,10 +422,72 @@ const UICtrl = (() => {
   // ****************************************************************************************************************
   return {
 
+    loadDashboard: async () => {
+      const contentArea = document.getElementById('data-content')
+
+      await fs.readFile(`${__dirname}/renderer/dashboard.html`, 'utf8', async (err, content) => {
+
+        // Check for indlæsningsfejl
+        if (err) {
+          console.log(err)
+          return
+        }
+
+        contentArea.innerHTML = content
+
+        // DOM elements
+        const tilladelsessager_today_dom = document.getElementById('tilladelsessager-today')
+        const afslutningssager_today_dom = document.getElementById('afslutningssager-today')
+        const tilladelsessager_week_dom = document.getElementById('tilladelsessager-week')
+        const afslutningssager_week_dom = document.getElementById('afslutningssager-week')
+        const tilladelsessager_month_dom = document.getElementById('tilladelsessager-month')
+        const afslutningssager_month_dom = document.getElementById('afslutningssager-month')
+
+        // Dags dato
+        const today = new Date()
+
+
+        // I dag
+        tilladelsessager_today_dom.textContent = await getRows('tilladelsessager', fn.datoConvert(today, 'yyyy-mm-dd'), fn.datoConvert(today, 'yyyy-mm-dd'))
+        afslutningssager_today_dom.textContent = await getRows('afslutningssager', fn.datoConvert(today, 'yyyy-mm-dd'), fn.datoConvert(today, 'yyyy-mm-dd'))
+        
+        // Denne uge
+        tilladelsessager_week_dom.textContent = await getRows('tilladelsessager', fn.datoConvert(fn.getMonday(), 'yyyy-mm-dd'), fn.datoConvert(fn.getSunday(), 'yyyy-mm-dd'))
+        afslutningssager_week_dom.textContent = await getRows('afslutningssager', fn.datoConvert(fn.getMonday(), 'yyyy-mm-dd'), fn.datoConvert(fn.getSunday(), 'yyyy-mm-dd'))
+
+        // Denne måned
+        tilladelsessager_month_dom.textContent = await getRows('tilladelsessager', fn.datoConvert(fn.getFirstDayOfMonth(), 'yyyy-mm-dd'), fn.datoConvert(fn.getLastDayOfMonth(), 'yyyy-mm-dd'))
+        afslutningssager_month_dom.textContent = await getRows('afslutningssager', fn.datoConvert(fn.getFirstDayOfMonth(), 'yyyy-mm-dd'), fn.datoConvert(fn.getLastDayOfMonth(), 'yyyy-mm-dd'))
+      })
+
+      
+      
+
+      async function getRows(sagstype, datoMin, datoMax) {
+        let sum = 0
+        let rows
+
+        if (sagstype === 'tilladelsessager')
+          rows = await DBCtrl.getKPITilladelsessager(datoMin, datoMax)
+          
+        if (sagstype === 'afslutningssager')
+          rows = await DBCtrl.getKPIAfslutningssager(datoMin, datoMax)
+
+        if (rows) {
+          rows.forEach(async row => {
+            sum += row.antalSager
+          })
+        }
+
+        return sum
+      }
+    },
+
+
     loadPageSettings: async () => {
       const contentArea = document.getElementById('data-content')
 
-      await fs.readFile(`${__dirname}/settings.html`, 'utf8', (err, content) => {
+      await fs.readFile(`${__dirname}/renderer/settings.html`, 'utf8', (err, content) => {
 
         if (err) {
           console.log(err)

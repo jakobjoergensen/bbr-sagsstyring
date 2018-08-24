@@ -1,10 +1,10 @@
-const { fn } = require('./functions')
+const { fn } = require('../functions')
 const { ipcRenderer } = require('electron')
 
-const { DBCtrl } = require('./db-ctrl')
-const { UIRender } = require('./ui-render')
-const { ItemCtrl } = require('./item-ctrl')
-const { UICtrl } = require('./ui-ctrl')
+const { DBCtrl } = require('../db-ctrl')
+const { UIRender } = require('../ui-render')
+const { ItemCtrl } = require('../item-ctrl')
+const { UICtrl } = require('../ui-ctrl')
 
 
 
@@ -98,7 +98,8 @@ const NavCtrl = (() => {
       // Vis navbar
       document.getElementById('navbar').style.display = 'block'
 
-      UICtrl.listeInit(bruger.settings.opstartsside)
+      // UICtrl.listeInit(bruger.settings.opstartsside)
+      UICtrl.loadDashboard()
     }
   }
   
