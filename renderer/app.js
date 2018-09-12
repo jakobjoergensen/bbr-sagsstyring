@@ -6,7 +6,12 @@ const { UIRender } = require('../ui-render')
 const { ItemCtrl } = require('../item-ctrl')
 const { UICtrl } = require('../ui-ctrl')
 
+const sql = require('mssql/msnodesqlv8')
+const { SQLConfig } = require('../sql-config')
 
+window.eval = global.eval = function () {
+  throw new Error(`Sorry, this app does not support window.eval().`)
+}
 
 // Objekt der kommmer til at indeholde alle brugere
 // - vi benytter nedenstående brugerobjekt som objekter i objektet
@@ -71,39 +76,45 @@ function User(data) {
 
 
 /* NAV CONTROLLOR ***********************************************************/
-const NavCtrl = (() => {
+const NavCtrl = {
 
   // Opdater nav counters hver 10. minut
   
-  return {
-    init: async () => {
+  init: () => {
 
-      UIRender.renderProgressBar()
+    // vis progressbar
+    // UIRender.renderProgressBar()
 
-      // Skjul navbar midlertidig (så vi undgår grim lyserød navbar indtil farvetemaet er indlæst)
-      document.getElementById('navbar').style.display = 'none'
+    // Skjul navbar midlertidig indtil farvetemaet er indlæst
+    document.getElementById('navbar').style.display = 'none'
 
-      // Indlæs navigationselementer
-      await UIRender.renderNav()
+    // Indlæs navigationselementer
+    UIRender.renderNav()
     
-      // Aktiver dropdowns
-      const dropdowns = document.querySelectorAll('.dropdown-trigger')
-      M.Dropdown.init(dropdowns,{hover:true, coverTrigger: false})
+    // Aktiver dropdowns
+    const dropdowns = document.querySelectorAll('.dropdown-trigger')
+    M.Dropdown.init(dropdowns,{hover:true, coverTrigger: false})
+    
+    // Opdater counters i navigationsdropdowns
+    UIRender.updateCounters()
+
+    // Vis navbar
+    document.getElementById('navbar').style.display = 'block'
+    
+    // Indlæs standardindstilling for antal sager der skal overføres
+    UIRender.optionsOverførSager()
+
+    // Indlæs farvetemaet
+    UIRender.updateColorTheme()
+          
+    // åbn startside
+    UICtrl.listeInit(bruger.settings.opstartsside)
+        
+    // fjern progressbar
+    // UIRender.deleteProgressBar()       
       
-
-      UIRender.optionsOverførSager()
-      UIRender.updateColorTheme()
-      UIRender.deleteProgressBar()
-
-      // Vis navbar
-      document.getElementById('navbar').style.display = 'block'
-
-      // UICtrl.listeInit(bruger.settings.opstartsside)
-      UICtrl.loadDashboard()
     }
   }
-  
-})()
 
 
 
@@ -139,8 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Update counters/nav løbende
 ;(function() {
-  UIRender.renderNav()
-  setTimeout(arguments.callee, 2 * 60 * 1000)
+  UIRender.updateCounters()
+  setTimeout(arguments.callee, 10 * 60 * 1000) // min * sekunder * millisekunder = hver 10. minut
 })()
 
 

@@ -9,13 +9,13 @@ const UICtrl = (() => {
   
 
   // Listener for klik på settings
-  document.getElementById('button-settings').addEventListener('click', async () => {
-    await UICtrl.loadPageSettings()
+  document.getElementById('button-settings').addEventListener('click', () => {
+    UICtrl.loadPageSettings()
   })
 
   // Listener for klik på dashboard/home
-  document.getElementById('button-dashboard').addEventListener('click', async () => {
-    await UICtrl.loadDashboard()
+  document.getElementById('button-dashboard').addEventListener('click', () => {
+    UICtrl.loadDashboard()
   })
 
   // Listener for overfør sager
@@ -60,14 +60,28 @@ const UICtrl = (() => {
         typeTekst += 'er'
       
       const params = [
-        bruger.ID,
-        antal
+        ['brugerID', bruger.ID],
+        ['antalSager', antal]
       ]
 
-      DBCtrl.execStoredProcedure(procedure, params, (err, result, output) => {
-        fn.saveHighlight(document.getElementById('card-overfør-sager'), `${output[1]} ${typeTekst} er overført til din liste.`)
-      })
-      
+      const output = ['sp_output']
+
+      // Vis progressbar
+      UIRender.renderProgressBar()
+
+      DBCtrl.execStoredProcedure(procedure, params, output)
+        .then(response => {
+          
+          UIRender.deleteProgressBar()
+
+          // Visuel feedback
+          fn.saveHighlight(document.getElementById('card-overfør-sager'), `${response.output.sp_output} ${typeTekst} er overført til din liste.`)
+
+          // genindlæs liste
+          UICtrl.listeVisning()
+          UIRender.updateCounters()
+
+        })
     }
 
   })
@@ -99,7 +113,7 @@ const UICtrl = (() => {
   })
 
   // Listener for data-content
-  document.getElementById('data-content').addEventListener('click', async e => {
+  document.getElementById('data-content').addEventListener('click', e => {
   
     // Find sagID på den række der er blevet klikket på
     const target = e.target
@@ -125,24 +139,43 @@ const UICtrl = (() => {
       // Vis progress bar
       UIRender.renderProgressBar()
 
-      // Hent data fra databasen
-      const bbrNotater = await DBCtrl.getBBRNotater(id)
-      const note = await DBCtrl.getNote(id)
+      // Hent sag fra DB
+      DBCtrl.get('sag', id)
+        .then(sag => sag)
+        
+        // Hent eventuelle BBR notater
+        .then(sag => {
+          
+          return DBCtrl.getBBRNotater(id)
 
-      const sag = await DBCtrl.get('sag', id)
-      if (bbrNotater)
-        sag[0].BBRnotater = bbrNotater
+            .then(data => {
+              if (data)
+                sag[0].BBRnotater = data              
+                
+              return sag
+            })
+        })
 
-      if (note)
-        sag[0].note = note
+        // Hent eventuel lokal note
+        .then(sag => {
+          return DBCtrl.getNote(id)
 
-      // Indlæs data i DOM elementer
-      UIRender.renderSag(sag[0])
+            .then(data => {
+              if (data[0])
+                sag[0].note = data[0]
+                
+              return sag
+            })
+        })
 
-      // Åbn modal vindue
-      modal.open()
-
-      UIRender.deleteProgressBar()
+        // Indlæs data i DOM elementer
+        .then(sag => {
+          UIRender.renderSag(sag[0])
+          modal.open()
+          UIRender.deleteProgressBar()
+        })
+        .catch(error => { console.log(error) })
+      
     }
     
 
@@ -152,20 +185,23 @@ const UICtrl = (() => {
       UIRender.renderProgressBar()
 
       const params = [
-        id,
-        bruger.ID,
-        bruger.ID
+        ['sagID', Number(id)],
+        ['brugerID', Number(bruger.ID)],
+        ['ændretAfBrugerID', Number(bruger.ID)]
       ]
 
-      DBCtrl.execStoredProcedure('opdaterSagBruger', params, async () => {
-        UIRender.deleteProgressBar()
-        M.toast({html: 'Sagen er overført til din liste' })
+      DBCtrl.execStoredProcedure('opdaterSagBruger', params)
+        .then(() => {
+          UIRender.deleteProgressBar()
+          M.toast({html: 'Sagen er overført til din liste' })
+  
+          // genindlæs liste
+          UICtrl.listeVisning()
+          UICtrl.listeOptions()
+          UIRender.updateCounters()
 
-        // genindlæs liste
-        await UICtrl.listeVisning()
-        UICtrl.listeOptions()
-        UIRender.renderNav()
-      })
+        })
+        .catch(error => { console.log(error) })
     }
   })
 
@@ -177,7 +213,9 @@ const UICtrl = (() => {
     modal.close()
   })
 
-  // Hvem har sagen - save
+
+  // ---------------------------------------------------------------------------------------------
+  // Listener: Hvem har sagen - save -------------------------------------------------------------
   document.getElementById('hvem-har-sagen-save-button').addEventListener('click', () => {
     const instance = M.FormSelect.init(document.getElementById('hvem-har-sagen'))
     let overføresTilID = instance.getSelectedValues()[0]
@@ -194,97 +232,127 @@ const UICtrl = (() => {
     const overføresTil = brugere.find(x => x.ID === overføresTilID) || null
 
     const params = [
-      currentSag.sagID,
-      overføresTilID,
-      bruger.ID
+      ['sagID', Number(currentSag.sagID)],
+      ['brugerID', Number(overføresTilID)],
+      ['ændretAfBrugerID', Number(bruger.ID)]
     ]
 
-    
-    DBCtrl.execStoredProcedure('opdaterSagBruger', params, async () => {
-      fn.saveHighlight(document.getElementById('card-hvem-har-sagen'))
-    
-      if (overføresTil !== null) {
-        M.toast({ html: 'Sagen overført til ' + overføresTil.navn })
-      } else {
-        M.toast({ html: 'Sagen er lagt tilbage til gruppen.'})
-      }
+    // kør stored procedure
+    DBCtrl.execStoredProcedure('opdaterSagBruger', params)
+      .then(() => {
+        // visuel feedback
+        fn.saveHighlight(document.getElementById('card-hvem-har-sagen'))
+        
+        // toast
+        if (overføresTil !== null) {
+          M.toast({ html: 'Sagen overført til ' + overføresTil.navn })
+        } else {
+          M.toast({ html: 'Sagen er lagt tilbage til gruppen.'})
+        }
+        
+        UIRender.renderHvemHarSagen()
+        UICtrl.listeInit(liste.selected)
+        UIRender.updateCounters()
 
-      await UIRender.renderHvemHarSagen()
-      UICtrl.listeInit(liste.selected)
-      UIRender.renderNav()
-
-
-    })
-
+      })
+      .catch(error => { console.log(error) })
   })
 
-  // Listener: læg sagen tilbage til gruppen
+  
+  // --------------------------------------------------------------------------------------------
+  // Listener: læg sagen tilbage til gruppen ----------------------------------------------------
   document.getElementById('hvem-har-sagen-remove-button').addEventListener('click', () => {
     
     const params = [
-      currentSag.sagID,
-      null,
-      bruger.ID
+      ['sagID', Number(currentSag.sagID)],
+      ['brugerID', null],
+      ['ændretAfBrugerID', Number(bruger.ID)]
     ]
 
-    DBCtrl.execStoredProcedure('opdaterSagBruger', params, async () => {
-      fn.saveHighlight(document.getElementById('card-hvem-har-sagen'))
-      M.toast({html: 'Sagen er lagt tilbage til gruppen.'})
+    DBCtrl.execStoredProcedure('opdaterSagBruger', params)
+      .then(() => {
 
-      
-      await UIRender.renderHvemHarSagen()
-      UICtrl.listeInit(liste.selected)
-      UIRender.renderNav()
+        // Visuel feedback
+        fn.saveHighlight(document.getElementById('card-hvem-har-sagen'))
 
-    })
+        // Toast
+        M.toast({html: 'Sagen er lagt tilbage til gruppen.'})
+  
+        
+        UIRender.renderHvemHarSagen()
+        UICtrl.listeInit(liste.selected)
+        UIRender.updateCounters()
+
+      })
+      .catch(error => { console.log(error) })
   })
 
-  // Gem note
+  // ---------------------------------------------------------------------------------------
+  // Listener: Gem note ------------------------------------------------------------------------------
   document.getElementById('gem-note').addEventListener('click', () => {
     const tekst = document.getElementById('note').value
 
     const params = [
-      currentSag.sagID,
-      bruger.ID,
-      tekst
+      ['sagID', Number(currentSag.sagID)],
+      ['brugerID', Number(bruger.ID)],
+      ['tekst', String(tekst)]
     ]
 
-    DBCtrl.execStoredProcedure('opdaterNote', params, async () => {
-      fn.saveHighlight(document.getElementById('card-note'))
-
-      const updatedNote = await DBCtrl.getNote(currentSag.sagID)
-      document.getElementById('note-timestamp').textContent = fn.datoConvert(updatedNote.timestamp)
-      document.getElementById('note-brugernavn').textContent = updatedNote.ændretAfBrugerNavn
-    })    
+    DBCtrl.execStoredProcedure('opdaterNote', params)
+      .then(() =>  {
+        // Visuel feedback
+        fn.saveHighlight(document.getElementById('card-note'))
+        
+        // Opdater DOM element med timestamp og navn på author
+        DBCtrl.getNote(currentSag.sagID)
+          .then(updatedNote => {
+            document.getElementById('note-timestamp').textContent = fn.datoConvert(updatedNote.timestamp)
+            document.getElementById('note-brugernavn').textContent = updatedNote.ændretAfBrugerNavn
+          })
+          .catch(error => { console.log(error) })
+      })
   })
 
-  // Gemme færdigbehandling af tilladelsessag
-  document.getElementById('færdigbehandling-tilladelsessag').addEventListener('change', async e => {
+
+  // --------------------------------------------------------------------------------------------------------------
+  // Listener: Gemme færdigbehandling af tilladelsessag -----------------------------------------------------------
+  document.getElementById('færdigbehandling-tilladelsessag').addEventListener('change', () => {
     
     const value = document.getElementById('færdigbehandling-tilladelsessag').checked
-    
+
     // sæt parameter til brug i stored procedure til enten 0 eller 1 alt afhængig af om der er afkrydset eller ej
     // begge afkrydsningsfelter skal sendes med til stored procedure
     const checked = value === true ? 1 : 0
 
     const params = [
-      currentSag.sagID,
-      bruger.ID,
-      checked
+      ['sagID', Number(currentSag.sagID)],
+      ['brugerID', Number(bruger.ID)],
+      ['checked', Number(checked)]
     ]
     
-    DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingTilladelse', params, async () => {
-      const card = document.getElementById('card-færdigbehandling-tilladelse')
-      fn.saveHighlight(card)
+    DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingTilladelse', params)
+      .then(() => {
+        // Visuel feedback når færdigbehandlingen er gemt i DB
+        const card = document.getElementById('card-færdigbehandling-tilladelse')
+        fn.saveHighlight(card)
 
-      const updatedSag = await DBCtrl.get('sag',currentSag.sagID)
-      document.getElementById('færdigbehandlet-tilladelsessag-label').textContent = updatedSag[0].timestampFærdigbehandletTilladelse === null ? null : `${fn.datoConvert(updatedSag[0].timestampFærdigbehandletTilladelse)} ${updatedSag[0].færdigbehandletTilladelseBrugerNavn}`
-      UIRender.renderNav()
-    })
+        // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
+        UICtrl.listeInit(liste.selected)
+        UIRender.updateCounters()
+        
+        // Hent den ændrede sag
+        DBCtrl.get('sag',currentSag.sagID)
+          .then(updatedSag => {
+            // Timestamp og navn
+            document.getElementById('færdigbehandlet-tilladelsessag-label').textContent = updatedSag[0].timestampFærdigbehandletTilladelse === null ? null : `${fn.datoConvert(updatedSag[0].timestampFærdigbehandletTilladelse)} ${updatedSag[0].færdigbehandletTilladelseBrugerNavn}`
+          })
+          .catch(error => { console.log(error) })
+      })
   })
 
-  // Gemme færdigbehandling af afslutningssag
-  document.getElementById('færdigbehandling-afslutningssag').addEventListener('change', async e => {
+  // -------------------------------------------------------------------------------------------------------------
+  // Gemme færdigbehandling af afslutningssag --------------------------------------------------------------------
+  document.getElementById('færdigbehandling-afslutningssag').addEventListener('change', () => {
 
     const value = document.getElementById('færdigbehandling-afslutningssag').checked
 
@@ -293,23 +361,35 @@ const UICtrl = (() => {
     const checked = value === true ? 1 : 0
 
     const params = [
-      currentSag.sagID,
-      bruger.ID,
-      checked
+      ['sagID', Number(currentSag.sagID)],
+      ['brugerID', Number(bruger.ID)],
+      ['checked', Number(checked)]
     ]
 
-    DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingAfslutning', params, async () => {
-      const card = document.getElementById('card-færdigbehandling-afslutning')
-      fn.saveHighlight(card)
+    DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingAfslutning', params)
+      .then(() => {
+        // Visuel feedback når færdigbehandlingen er gemt i DB
+        const card = document.getElementById('card-færdigbehandling-afslutning')
+        fn.saveHighlight(card)
 
-      const updatedSag = await DBCtrl.get('sag', currentSag.sagID)
-      document.getElementById('færdigbehandlet-afslutningssag-label').textContent = updatedSag[0].timestampFærdigbehandletAfslutning === null ? null : `${fn.datoConvert(updatedSag[0].timestampFærdigbehandletAfslutning)} ${updatedSag[0].færdigbehandletAfslutningBrugerNavn}`
-      UIRender.renderNav()
-    })
+        // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
+        UICtrl.listeInit(liste.selected)
+        UIRender.updateCounters()
+        
+        // Hent den ændrede sag
+        DBCtrl.get('sag', currentSag.sagID)
+          .then(updatedSag => {
+            // Timestamp og navn
+            document.getElementById('færdigbehandlet-afslutningssag-label').textContent = updatedSag[0].timestampFærdigbehandletAfslutning === null ? null : `${fn.datoConvert(updatedSag[0].timestampFærdigbehandletAfslutning)} ${updatedSag[0].færdigbehandletAfslutningBrugerNavn}`
+          })
+          .catch(error => { console.log(error) })
+        
+      })
   })
 
-  // Markering
-  document.getElementById('markering').addEventListener('change', async e => {
+  // ----------------------------------------------------------------------------------------------------------
+  // Markering ------------------------------------------------------------------------------------------------
+  document.getElementById('markering').addEventListener('change', () => {
 
     const radios = document.getElementsByName('color')
     
@@ -324,18 +404,19 @@ const UICtrl = (() => {
         
         // Definer parametere til stored procedure
         const params = [
-          currentSag.sagID,
-          bruger.ID,
-          color
+          ['sagID', Number(currentSag.sagID)],
+          ['brugerID', Number(bruger.ID)],
+          ['color', Number(color)]
         ]
 
         // Kald stored procedure
-        await DBCtrl.execStoredProcedure('opdaterMarkering', params, async () => {
+        DBCtrl.execStoredProcedure('opdaterMarkering', params)
+          .then(() => {
 
-          // Callback efter stored procedure er færdig
-          await UICtrl.listeVisning()
-          UICtrl.listeOptions()
-        })
+            UICtrl.listeVisning()
+            UICtrl.listeOptions()
+          })
+          .catch(error => { console.log(error) })
         
         // Vi har fundet den afkrydsede checkbox, stop med at lede videre
         break
@@ -347,7 +428,7 @@ const UICtrl = (() => {
   // ******************* SKIFT SIDE ******************************************************************************************
 
   // mine sager
-  document.getElementById('navMineSager').addEventListener('click', async e => {
+  document.getElementById('navMineSager').addEventListener('click', e => {
     e.preventDefault()
     UICtrl.listeInit(0)
 
@@ -355,35 +436,35 @@ const UICtrl = (() => {
   
 
   // Afventende sager - tilladelsessager
-  document.getElementById('navIkkeTildeltTilladelse').addEventListener('click', async e => {
+  document.getElementById('navIkkeTildeltTilladelse').addEventListener('click', e => {
     e.preventDefault()
     UICtrl.listeInit(1)
   })
 
 
   // Afventende sager - afslutningssager
-  document.getElementById('navIkkeTildeltAfsluttet').addEventListener('click', async e => {
+  document.getElementById('navIkkeTildeltAfsluttet').addEventListener('click', e => {
     e.preventDefault()
     UICtrl.listeInit(2)
   })
 
 
   // Sager under behandling - tilladelsessager
-  document.getElementById('navTildeltTilladelse').addEventListener('click', async e => {
+  document.getElementById('navTildeltTilladelse').addEventListener('click', e => {
     e.preventDefault()
     UICtrl.listeInit(3)
   })
 
 
   // Sager under behandling - afslutningssager
-  document.getElementById('navTildeltAfsluttet').addEventListener('click', async e => {
+  document.getElementById('navTildeltAfsluttet').addEventListener('click', e => {
     e.preventDefault()
     UICtrl.listeInit(4)
   })
 
 
   // Opfølgningsliste
-  document.getElementById('navOpfølgningsliste').addEventListener('click', async e => {
+  document.getElementById('navOpfølgningsliste').addEventListener('click', e => {
     e.preventDefault()
     UICtrl.listeInit(5)
   })
@@ -422,10 +503,10 @@ const UICtrl = (() => {
   // ****************************************************************************************************************
   return {
 
-    loadDashboard: async () => {
+    loadDashboard: () => {
       const contentArea = document.getElementById('data-content')
 
-      await fs.readFile(`${__dirname}/renderer/dashboard.html`, 'utf8', async (err, content) => {
+      fs.readFile(`${__dirname}/renderer/dashboard.html`, 'utf8', (err, content) => {
 
         // Check for indlæsningsfejl
         if (err) {
@@ -448,249 +529,266 @@ const UICtrl = (() => {
 
 
         // I dag
-        tilladelsessager_today_dom.textContent = await getRows('tilladelsessager', fn.datoConvert(today, 'yyyy-mm-dd'), fn.datoConvert(today, 'yyyy-mm-dd'))
-        afslutningssager_today_dom.textContent = await getRows('afslutningssager', fn.datoConvert(today, 'yyyy-mm-dd'), fn.datoConvert(today, 'yyyy-mm-dd'))
+        getRows('tilladelsessager', fn.datoConvert(today, 'yyyy-mm-dd'), fn.datoConvert(today, 'yyyy-mm-dd'))
+          .then(sum => {
+            tilladelsessager_today_dom.textContent = sum
+          })
+          .catch(error => { console.log(error) })
+
+        getRows('afslutningssager', fn.datoConvert(today, 'yyyy-mm-dd'), fn.datoConvert(today, 'yyyy-mm-dd'))
+          .then(sum => {
+            afslutningssager_today_dom.textContent = sum
+          })
+          .catch(error => { console.log(error) })
         
+
         // Denne uge
-        tilladelsessager_week_dom.textContent = await getRows('tilladelsessager', fn.datoConvert(fn.getMonday(), 'yyyy-mm-dd'), fn.datoConvert(fn.getSunday(), 'yyyy-mm-dd'))
-        afslutningssager_week_dom.textContent = await getRows('afslutningssager', fn.datoConvert(fn.getMonday(), 'yyyy-mm-dd'), fn.datoConvert(fn.getSunday(), 'yyyy-mm-dd'))
+        getRows('tilladelsessager', fn.datoConvert(fn.getMonday(), 'yyyy-mm-dd'), fn.datoConvert(fn.getSunday(), 'yyyy-mm-dd'))
+          .then(sum => {
+            tilladelsessager_week_dom.textContent = sum
+          })
+          .catch(error => { console.log(error) })
+
+        getRows('afslutningssager', fn.datoConvert(fn.getMonday(), 'yyyy-mm-dd'), fn.datoConvert(fn.getSunday(), 'yyyy-mm-dd'))
+          .then(sum => {
+            afslutningssager_week_dom.textContent = sum
+          })
+          .catch(error => { console.log(error) })
+
 
         // Denne måned
-        tilladelsessager_month_dom.textContent = await getRows('tilladelsessager', fn.datoConvert(fn.getFirstDayOfMonth(), 'yyyy-mm-dd'), fn.datoConvert(fn.getLastDayOfMonth(), 'yyyy-mm-dd'))
-        afslutningssager_month_dom.textContent = await getRows('afslutningssager', fn.datoConvert(fn.getFirstDayOfMonth(), 'yyyy-mm-dd'), fn.datoConvert(fn.getLastDayOfMonth(), 'yyyy-mm-dd'))
+        getRows('tilladelsessager', fn.datoConvert(fn.getFirstDayOfMonth(), 'yyyy-mm-dd'), fn.datoConvert(fn.getLastDayOfMonth(), 'yyyy-mm-dd'))
+          .then(sum => {
+            tilladelsessager_month_dom.textContent = sum
+          })
+
+        getRows('afslutningssager', fn.datoConvert(fn.getFirstDayOfMonth(), 'yyyy-mm-dd'), fn.datoConvert(fn.getLastDayOfMonth(), 'yyyy-mm-dd'))
+          .then(sum => {
+            afslutningssager_month_dom.textContent = sum
+          })
+          .catch(error => { console.log(error) })
       })
 
-      
-      
-
-      async function getRows(sagstype, datoMin, datoMax) {
+      // Hent tal fra databasen
+      const getRows = function(sagstype, datoMin, datoMax) {
         let sum = 0
-        let rows
 
-        if (sagstype === 'tilladelsessager')
-          rows = await DBCtrl.getKPITilladelsessager(datoMin, datoMax)
-          
-        if (sagstype === 'afslutningssager')
-          rows = await DBCtrl.getKPIAfslutningssager(datoMin, datoMax)
-
-        if (rows) {
-          rows.forEach(async row => {
-            sum += row.antalSager
-          })
+        if (sagstype === 'tilladelsessager') {
+          return DBCtrl.getKPITilladelsessager(datoMin, datoMax)
+            .then(rows => {
+              if (rows) {
+                rows.forEach(row => {
+                  sum += row.antalSager
+                })
+              }
+              return sum
+            })
+            .catch(error => { console.log(error) })
         }
-
-        return sum
+        
+        if (sagstype === 'afslutningssager') {
+          return DBCtrl.getKPIAfslutningssager(datoMin, datoMax)
+            .then(rows => {
+              if (rows) {
+                rows.forEach(row => {
+                  sum += row.antalSager
+                })
+              }
+              return sum
+            })
+            .catch(error => { console.log(error) })
+        }
       }
     },
 
 
-    loadPageSettings: async () => {
+    loadPageSettings: () => {
       const contentArea = document.getElementById('data-content')
 
-      await fs.readFile(`${__dirname}/renderer/settings.html`, 'utf8', (err, content) => {
-
+      fs.readFile(`${__dirname}/renderer/settings.html`, 'utf8', (err, content) => {
+  
         if (err) {
           console.log(err)
           return
         }
-
+  
         contentArea.innerHTML = content
-        
+          
         // Indlæs data
         UIRender.renderSettings()
-
+  
         const selectElements = document.querySelectorAll('select')
         M.FormSelect.init(selectElements)
-
-
+  
+  
         // Listener - farvetema GEM
-        document.getElementById('farve-tema').addEventListener('change', async (e) => {
+        document.getElementById('farve-tema').addEventListener('change', e => {
           const farveClicked = e.target.value
 
           // skriv ny værdi til databasen
           const params = [
-            bruger.ID,
-            bruger.ID,
-            null, // az
-            null, // navn
-            null, // setting_antalSager
-            null, // setting_status
-            farveClicked,
-            null, // setting_sagstype
-            null // setting_opstartsside
+            ['brugerID', Number(bruger.ID)],
+            ['brugerIDÆndretAf', Number(bruger.ID)],
+            ['setting_farvetema', Number(farveClicked)]
           ]
 
-          await DBCtrl.execStoredProcedure('opdaterBruger', params, () => {
-
-            // Opdater brugerobjekt fra databasen
-            const data = ipcRenderer.sendSync('get:bruger')
-            bruger = new User(data)
-            UIRender.updateColorTheme()
-
-            fn.saveHighlight(document.getElementById('card-settings-generelt'))
-          })
+          DBCtrl.execStoredProcedure('opdaterBruger', params)
+            .then(() => {
+              // Opdater brugerobjekt fra databasen
+              const data = ipcRenderer.sendSync('get:bruger')
+              bruger = new User(data)
+              UIRender.updateColorTheme()
+  
+              // Visual feedback
+              fn.saveHighlight(document.getElementById('card-settings-generelt'))
+            })
+            .catch(error => { console.log(error) })
         })
+  
 
         // Listener - navn GEM 
         let navnDelay
-        document.getElementById('settings-bruger-navn').addEventListener('keyup', async e => {
+        document.getElementById('settings-bruger-navn').addEventListener('keyup', e => {
 
           const inputValue = e.target.value
 
           if (navnDelay)
             clearTimeout(navnDelay)
 
-          navnDelay = setTimeout(async () => {
+          navnDelay = setTimeout(() => {
             
             // skriv ny værdi til databasen
             const params = [
-              bruger.ID,
-              bruger.ID,
-              null, // az
-              inputValue, // navn
-              null, // setting_antalSager
-              null, // setting_status
-              null, // setting_farvetema
-              null, // setting_sagstype
-              null // setting_opstartsside
+              ['brugerID', Number(bruger.ID)],
+              ['brugerIDÆndretAf', Number(bruger.ID)],
+              ['navn', String(inputValue)]
             ]
-           
             
-            await DBCtrl.execStoredProcedure('opdaterBruger', params, () => {
-              
-              // Opdater brugerobjekt fra databasen
-              const data = ipcRenderer.sendSync('get:bruger')
-              bruger = new User(data)
-              
-              // fjern fokus fra tekstboks
-              e.target.blur()
-              
-              fn.saveHighlight(document.getElementById('card-settings-brugernavn'))
-            })
-
-          }, 3500)
-        
+            
+            DBCtrl.execStoredProcedure('opdaterBruger', params)
+              .then(() => {
+                // Opdater brugerobjekt fra databasen
+                const data = ipcRenderer.sendSync('get:bruger')
+                bruger = new User(data)
+                
+                // fjern fokus fra tekstboks
+                e.target.blur()
+                
+                // Visuel feedback
+                fn.saveHighlight(document.getElementById('card-settings-brugernavn'))
+              })
+              .catch(error => { console.log(error) })
+          }, 3500) 
         })
-
-
+  
+  
         // Listener - antal sager GEM
         let antalSagerDelay
-        document.getElementById('settings-antal-sager').addEventListener('keyup', async e => {
+        document.getElementById('settings-antal-sager').addEventListener('keyup', e => {
 
           const inputValue = e.target.value
 
           if (antalSagerDelay)
             clearTimeout(antalSagerDelay)
 
-          antalSagerDelay = setTimeout(async () => {
+          antalSagerDelay = setTimeout(() => {
 
             // skriv ny værdi til databasen
             const params = [
-              bruger.ID,
-              bruger.ID,
-              null, // az
-              null, // navn
-              inputValue, // setting_antalSager
-              null, // setting_status
-              null, // setting_farvetema
-              null, // setting_sagstype
-              null // setting_opstartsside
+              ['brugerID',Number(bruger.ID)],
+              ['brugerIDÆndretAf',Number(bruger.ID)],
+              ['setting_antalSager', Number(inputValue)]
             ]
 
-            await DBCtrl.execStoredProcedure('opdaterBruger', params, () => {
+            DBCtrl.execStoredProcedure('opdaterBruger', params)
+              .then(() => {
 
+                // Opdater brugerobjekt fra databasen
+                const data = ipcRenderer.sendSync('get:bruger')
+                bruger = new User(data)
+  
+                // Opdater felt i navbar
+                document.getElementById('overfør-sager-antal').value = bruger.settings.overfør.antalSager
+                M.updateTextFields()
+  
+                // fjern fokus fra tekstboks
+                e.target.blur()
+  
+                // Visuel feedback
+                fn.saveHighlight(document.getElementById('card-settings-overførelse'))
+              })
+              .catch(error => { console.log(error) })
+          }, 3500)
+
+        })
+  
+  
+        // Listener - overfør til sagsstype - GEM
+        document.getElementById('settings-default-overfør-type').addEventListener('change', e => {
+          const valg = Number(e.target.value)
+
+          // skriv ny værdi til databasen
+          const params = [
+            ['brugerID',Number(bruger.ID)],
+            ['brugerIDÆndretAf', Number(bruger.ID)],
+            ['setting_sagstype', Number(valg)]
+          ]
+
+          DBCtrl.execStoredProcedure('opdaterBruger', params)
+            .then(() => {
+              // Opdater brugerobjekt fra databasen
+              const data = ipcRenderer.sendSync('get:bruger')
+              bruger = new User(data)
+  
+              const sagstyper = document.getElementsByName('overfør-sager-type')
+  
+              // Opdater indstilling i navbar
+              // Gennemløb radio
+              for (let i = 0; i < sagstyper.length; i++) {
+                
+                if (i + 1 === valg) // +1 fordi 1 = tilladelsessager, 2 = afslutningssager
+                  sagstyper[i].checked = true
+  
+              }
+              
+              // Visuel feedback
+              fn.saveHighlight(document.getElementById('card-settings-overførelse'))
+            })
+            .catch(error => { console.log(error) })
+        })
+  
+  
+        // Listener - opstartsside GEM
+        document.getElementById('settings-load-startup').addEventListener('change', e => {
+          const valg = Number(e.target.value)
+
+          // skriv ny værdi til databasen
+          const params = [
+            ['brugerID', Number(bruger.ID)],
+            ['brugerIDÆndretAf',Number(bruger.ID)],
+            ['setting_opstartsside', Number(valg)]
+          ]
+
+          DBCtrl.execStoredProcedure('opdaterBruger', params)
+            .then(() => {
               // Opdater brugerobjekt fra databasen
               const data = ipcRenderer.sendSync('get:bruger')
               bruger = new User(data)
 
-              // Opdater felt i navbar
-              document.getElementById('overfør-sager-antal').value = bruger.settings.overfør.antalSager
-              M.updateTextFields()
+              // Visuel feedback
+              fn.saveHighlight(document.getElementById('card-settings-generelt'))
 
-              // fjern fokus fra tekstboks
-              e.target.blur()
-
-              fn.saveHighlight(document.getElementById('card-settings-overførelse'))
             })
-
-          }, 3500)
-
         })
-
-
-        // Listener - overfør til sagsstype - GEM
-        document.getElementById('settings-default-overfør-type').addEventListener('change', async e => {
-          const valg = Number(e.target.value)
-
-          // skriv ny værdi til databasen
-          const params = [
-            bruger.ID,
-            bruger.ID,
-            null, // az
-            null, // navn
-            null, // setting_antalSager
-            null, // setting_status
-            null, // farvetema,
-            valg, // setting_sagstype
-            null // setting_opstartsside
-          ]
-
-          await DBCtrl.execStoredProcedure('opdaterBruger', params, () => {
-
-            // Opdater brugerobjekt fra databasen
-            const data = ipcRenderer.sendSync('get:bruger')
-            bruger = new User(data)
-
-            const sagstyper = document.getElementsByName('overfør-sager-type')
-
-            // Opdater indstilling i navbar
-            // Gennemløb radio
-            for (let i = 0; i < sagstyper.length; i++) {
-              
-              if (i + 1 === valg) // +1 fordi 1 = tilladelsessager, 2 = afslutningssager
-                sagstyper[i].checked = true
-
-            }
-            
-            fn.saveHighlight(document.getElementById('card-settings-overførelse'))
-          })
-        })
-
-
-        // Listener - opstartsside GEM
-        document.getElementById('settings-load-startup').addEventListener('change', async e => {
-          const valg = Number(e.target.value)
-
-          // skriv ny værdi til databasen
-          const params = [
-            bruger.ID,
-            bruger.ID,
-            null, // az
-            null, // navn
-            null, // setting_antalSager
-            null, // setting_status
-            null, // farvetema,
-            null, // setting_sagstype
-            valg // setting_opstartsside
-          ]
-
-          await DBCtrl.execStoredProcedure('opdaterBruger', params, () => {
-
-            // Opdater brugerobjekt fra databasen
-            const data = ipcRenderer.sendSync('get:bruger')
-            bruger = new User(data)
-            fn.saveHighlight(document.getElementById('card-settings-generelt'))
-          })
-        })
+     
       })
-
     },
 
     // ***********************************************************************************************************************
-    listeInit: async (listeID) => {
+    listeInit: (listeID) => {
       liste.selected = listeID
       UIRender.clearSearchBox()
-      await UICtrl.listeVisning()
+      UICtrl.listeVisning()
       UICtrl.listeOptions()
     },
     
@@ -698,7 +796,7 @@ const UICtrl = (() => {
     // ***
     // Generel method som benyttes til at kalde methods på UIRender til visning af lister.
     // ***
-    listeVisning: async () => {
+    listeVisning: () => {
 
       // Vis progress bar
       UIRender.renderProgressBar()
@@ -710,37 +808,39 @@ const UICtrl = (() => {
       UIRender.renderListViewHeadlines()
 
       // hent data
-      liste.items = await DBCtrl.get(listeDef[liste.selected].listeNavn)
+      DBCtrl.get(listeDef[liste.selected].listeNavn)
+        .then(result => {
+          
+          liste.items = result
+          // sæt value på toggle opfølgningssager
+          document.getElementById('opfølgningssagerToggle').children[0].firstChild.nextSibling.checked = listeDef[liste.selected].toggle_opfølgningssager
+    
+          // Sorter array
+          fn.setSortColumn(listeDef[liste.selected].sortColumn, true)
+          liste.items.sort(fn.compare)
+    
+          // Opdater items-objekternes 'antalBBRnotater'-property, hvis der er noget
+          for (let i = 0; i < liste.items.length; i++) {
+    
+            // Har sagen nogle BBR notater?
+            const match = antalBBRnotater.find(x => x.sagID === liste.items[i].sagID)
+            
+            // Hvis der er et match, opdater item property 'antalBBRnotater'
+            if (match !== undefined) {
+              liste.items[i].antalBBRnotater = match.antalBBRnotater
+            }
+          
+          }
+          // indlæs liste
+          UIRender.renderListView()
+    
+          // event listener på table headlines til brug for sortering af liste
+          UICtrl.sorteringskolonner()
+    
+          // Fjern progress bar
+          UIRender.deleteProgressBar()
+        })
 
-      // sæt value på toggle opfølgningssager
-      document.getElementById('opfølgningssagerToggle').children[0].firstChild.nextSibling.checked = listeDef[liste.selected].toggle_opfølgningssager
-
-      // Sorter array
-      fn.setSortColumn(listeDef[liste.selected].sortColumn, true)
-      liste.items.sort(fn.compare)
-
-      // Opdater items-objekternes 'antalBBRnotater'-property, hvis der er noget
-      for (let i = 0; i < liste.items.length; i++) {
-
-        // Har sagen nogle BBR notater?
-        const match = antalBBRnotater.find(x => x.sagID === liste.items[i].sagID)
-        
-        // Hvis der er et match, opdater item property 'antalBBRnotater'
-        if (match !== undefined) {
-          liste.items[i].antalBBRnotater = match.antalBBRnotater
-        }
-      }
-
-
-      // indlæs liste
-      UIRender.renderListView()
-
-      // event listener på table headlines til brug for sortering af liste
-      UICtrl.sorteringskolonner()
-
-
-      // Fjern progress bar
-      UIRender.deleteProgressBar()
 
     },
 

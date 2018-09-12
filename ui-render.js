@@ -294,46 +294,27 @@ const UIRender = {
 
   },
 
-  renderNav: async () => {
-    // init counters
-    const countIkkeTildeltTilladelse = await DBCtrl.getCounts('countIkkeTildeltTilladelse')
-    const countIkkeTildeltAfsluttet = await DBCtrl.getCounts('countIkkeTildeltAfsluttet')
-    const countTildeltTilladelse = await DBCtrl.getCounts('countTildeltTilladelse')
-    const countTildeltAfsluttet = await DBCtrl.getCounts('countTildeltAfsluttet')
-    const countTildelt = await DBCtrl.getCounts('countTildelt')
-    const countOpfølgningsliste = await DBCtrl.getCounts('countOpfølgningsliste')
+  updateCounters: () => {
+
+    // Opdaterer angivelse af antal sager i de forskellige lister i navigationsdropdowns
+    DBCtrl.getCounts('countIkkeTildeltTilladelse').then(result => { document.getElementById('navIkkeTildeltTilladelse-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countIkkeTildeltAfsluttet').then(result => { document.getElementById('navIkkeTildeltAfsluttet-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countTildeltTilladelse').then(result => { document.getElementById('navTildeltTilladelse-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countTildeltAfsluttet').then(result => { document.getElementById('navTildeltAfsluttet-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countOpfølgningsliste').then(result => { document.getElementById('navOpfølgningsliste-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countTildelt').then(result => { document.getElementById('navMineSager-counter').textContent = result[0].count })
+    
+  }, 
+
+  renderNav: () => {
 
     const navElements = [
-      {
-        id: 'navIkkeTildeltTilladelse',
-        text: 'Tilladelsessager',
-        count: countIkkeTildeltTilladelse
-      },
-      {
-        id: 'navIkkeTildeltAfsluttet',
-        text: 'Afslutningssager',
-        count: countIkkeTildeltAfsluttet
-      },
-      {
-        id: 'navTildeltTilladelse',
-        text: 'Tilladelsessager',
-        count: countTildeltTilladelse
-      },
-      {
-        id: 'navTildeltAfsluttet',
-        text: 'Afslutningssager',
-        count: countTildeltAfsluttet
-      },
-      {
-        id: 'navOpfølgningsliste',
-        text: 'Opfølgningsliste',
-        count: countOpfølgningsliste
-      },
-      {
-        id: 'navMineSager',
-        text: 'Mine sager',
-        count: countTildelt
-      }
+      { id: 'navIkkeTildeltTilladelse', text: 'Tilladelsessager' },
+      { id: 'navIkkeTildeltAfsluttet', text: 'Afslutningssager' },
+      { id: 'navTildeltTilladelse', text: 'Tilladelsessager' },
+      { id: 'navTildeltAfsluttet', text: 'Afslutningssager' },
+      { id: 'navOpfølgningsliste', text: 'Opfølgningsliste' },
+      { id: 'navMineSager', text: 'Mine sager' }
     ]
 
     navElements.forEach(element => {
@@ -341,7 +322,8 @@ const UIRender = {
       const span = document.createElement('span')
       const small = document.createElement('small')
 
-      small.textContent = element.count
+      small.textContent = '0'
+      small.setAttribute('id', element.id + '-counter')
       link.textContent = element.text
 
       span.classList.add('right')
@@ -467,10 +449,10 @@ const UIRender = {
       const tr = document.createElement('tr')
       tr.innerHTML = `
         <tr>
-          <td>${notat.dato_oprettet.toLocaleDateString()}</td>
-          <td>${notat.notatlinjenummer}</td>
-          <td>${notat.entitetIdentifikation}</td>
-          <td>${notat.NotatTekst}</td>
+          <td>${notat.datoOprettet.toLocaleDateString()}</td>
+          <td>${notat.notatNummer}</td>
+          <td>${notat.entitetsidentifikation}</td>
+          <td>${notat.notatTekst}</td>
         </tr>
       `
       tbody.appendChild(tr)
@@ -540,7 +522,7 @@ const UIRender = {
     document.getElementById('hvem-har-sagen-brugernavn').textContent = sag.sagBrugerÆndringBrugerNavn
   },
 
-  updateColorTheme: async () => {
+  updateColorTheme: () => {
 
     const elementsToUpdate = [
       (document.getElementsByTagName('nav'))[0],
@@ -597,7 +579,7 @@ const UIRender = {
     
   },
 
-  optionsOverførSager: async() =>{
+  optionsOverførSager: () => {
     
     // Sagstype
     const sagstyper = document.getElementsByName('overfør-sager-type')

@@ -1,12 +1,16 @@
-// SQL Config
-const server = 'srvsql29'
-const database = 'BBRsagsstyring'
+
+// const SQLConfig = {
+//     connectionString: `Server=${server};Database=${database};user=aztmbjj;Password=7ureTAKE`
+// }
 
 const SQLConfig = {
-    // driver: 'msnodesqlv8',
-    connectionString: `Driver={SQL Server Native Client 11.0};Server=${server};Database=${database};Trusted_Connection={yes};`
+    server: 'srvsql29',
+    database: 'BBRsagsstyring',
+    driver: 'msnodesqlv8',
+    options: {
+        trustedConnection: true
+    }
 }
-
 
 // Exports
 module.exports = {

@@ -1,16 +1,19 @@
-const { app, Menu, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, Menu, BrowserWindow, ipcMain, dialog, session } = require('electron')
 const updater = require('./updater')
 const { SQLConfig } = require('./sql-config')
 const path = require('path')
-const sql = require('msnodesqlv8')
+const sql = require('mssql/msnodesqlv8')
+
 
 
 const az = process.env['USERPROFILE'].split(path.sep)[2]
-// const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
-const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'az18982'`
+const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
+// const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'az18982'`
 
 let mainWindow
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
+
+let pool
 
 // Luk ordentlig ned
 app.on('window-all-closed', () => {
@@ -18,11 +21,18 @@ app.on('window-all-closed', () => {
 })
 
 // START
-app.on('ready', () => {
+app.on('ready', async () => {
 
-  sql.query(SQLConfig.connectionString, loadUserQuery, (err, rows) => {
-    
-    if (rows.length > 0) {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({ responseHeaders: `default-src * 'self'; style-src * 'self' 'unsafe-inline'` })
+  })
+
+  try {
+    pool = await sql.connect(SQLConfig)
+    const result = await pool.request()
+      .query(loadUserQuery)
+
+    if (result['recordsets'].length > 0) {
 
       // create main window
       mainWindow = new BrowserWindow({
@@ -33,7 +43,8 @@ app.on('ready', () => {
         height: 1000,
         webPreferences: {
           //devTools: false
-          devTools: true
+          devTools: true,
+          allowRunningInsecureContent: false
         }
       })
 
@@ -43,12 +54,12 @@ app.on('ready', () => {
       mainWindow.once('ready-to-show', () => {
         mainWindow.show()
       })
-      
+
       // Sæt programmenuen
       Menu.setApplicationMenu(mainMenu)
 
       // Check for updates
-      setTimeout(updater.check, 2000)
+      // setTimeout(updater.check, 2000)
 
     } else {
 
@@ -56,33 +67,46 @@ app.on('ready', () => {
       dialog.showErrorBox('Bruger findes ikke', 'Du er ikke oprettet som bruger i BBR sagsstyringsdatabasen.\nProgrammet kan ikke åbnes.')
       app.quit()
     }
-  })  
+
+
+  } catch (err) {
+
+    console.log(err)
+
+  }
+
 })
 
 
 
 // ipc listener - hent data om brugeren der er logget ind
-ipcMain.on('get:bruger', e => {
-  sql.query(SQLConfig.connectionString, loadUserQuery, (err, rows) => {
-    e.returnValue = rows[0]
-  })
+ipcMain.on('get:bruger', async e => {
+  try {
+    const result = await pool.request().query(loadUserQuery)
+    e.returnValue = result['recordsets'][0][0]
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 
 // ipc listener - hent data om alle brugere
-ipcMain.on('get:brugere', e => {
-  const query = 'SELECT * FROM view_brugerAktuel WHERE setting_status <> 0 ORDER BY navn ASC'
-
-  sql.query(SQLConfig.connectionString, query, (err, rows) => {
-    e.returnValue = rows
-  })
+ipcMain.on('get:brugere', async e => {
+  try {
+    const result = await pool.request().query('SELECT * FROM view_brugerAktuel WHERE setting_status <> 0 ORDER BY navn ASC')
+    e.returnValue = result['recordsets'][0]
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 
 // ipc listener - hent oplysninger om antal BBR notater
-ipcMain.on('get:antalBBRnotater', e => {
-  const query = 'SELECT sagID, COUNT(sagID) \'antalBBRnotater\' FROM view_bbrNotatNy GROUP BY sagID'
-  sql.query(SQLConfig.connectionString, query, (err, rows) => {
-    e.returnValue = rows
-  })
+ipcMain.on('get:antalBBRnotater', async e => {
+  try {
+    const result = await pool.request().query('SELECT sagID, COUNT(sagID) \'antalBBRnotater\' FROM view_bbrNotatNy GROUP BY sagID')
+    e.returnValue = result['recordsets'][0]
+  } catch (err) {
+    console.log(err)
+  }
 })

@@ -1,6 +1,9 @@
+const { DBCtrl } = require('../db-ctrl')
 
-(function () {
-  
-  console.log('tjek')
-  setTimeout(arguments.callee, 2000);
-})();
+DBCtrl.getCounts('countIkkeTildeltTilladelse')
+.then(result => {
+  console.log(result[0].count)
+})
+.catch(error => {
+  console.log('Error! ', error)
+})
