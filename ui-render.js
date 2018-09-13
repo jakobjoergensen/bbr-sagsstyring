@@ -486,40 +486,43 @@ const UIRender = {
     }
   },
 
-  renderHvemHarSagen: async () => {
+  renderHvemHarSagen: () => {
     
     const select = document.getElementById('hvem-har-sagen')
-    const data = await DBCtrl.get('sag', currentSag.sagID)
-    const sag = data[0]
+    DBCtrl.get('sag', currentSag.sagID)
+      .then(data => {
 
-    // Ryd gammelt indhold
-    UIRender.deleteChildren('hvem-har-sagen')
-    UIRender.deleteChildren('hvem-har-sagen-timestamp')
-    UIRender.deleteChildren('hvem-har-sagen-brugernavn')
-
-    // Tomt option element
-    const option = document.createElement('option')
-    option.setAttribute('value', 'tilbage-til-gruppen')
-    option.textContent = 'Ingen'
-    select.appendChild(option)
-
-    // Brugere option elementer
-    brugere.forEach(bruger => {
-      const option = document.createElement('option')
-      option.setAttribute('value', bruger.ID)
-      option.textContent = bruger.navn
-
-      if (bruger.ID === sag.brugerID)
-        option.setAttribute('selected', true)
-
-      select.appendChild(option)
-    })
-
-    // Init select
-    M.FormSelect.init(document.getElementById('hvem-har-sagen'))
-
-    document.getElementById('hvem-har-sagen-timestamp').textContent = fn.datoConvert(sag.sagBrugerÆndringTimestamp)
-    document.getElementById('hvem-har-sagen-brugernavn').textContent = sag.sagBrugerÆndringBrugerNavn
+        const sag = data[0]
+    
+        // Ryd gammelt indhold
+        UIRender.deleteChildren('hvem-har-sagen')
+        UIRender.deleteChildren('hvem-har-sagen-timestamp')
+        UIRender.deleteChildren('hvem-har-sagen-brugernavn')
+    
+        // Tomt option element
+        const option = document.createElement('option')
+        option.setAttribute('value', 'tilbage-til-gruppen')
+        option.textContent = 'Ingen'
+        select.appendChild(option)
+    
+        // Brugere option elementer
+        brugere.forEach(bruger => {
+          const option = document.createElement('option')
+          option.setAttribute('value', bruger.ID)
+          option.textContent = bruger.navn
+    
+          if (bruger.ID === sag.brugerID)
+            option.setAttribute('selected', true)
+    
+          select.appendChild(option)
+        })
+    
+        // Init select
+        M.FormSelect.init(document.getElementById('hvem-har-sagen'))
+    
+        document.getElementById('hvem-har-sagen-timestamp').textContent = fn.datoConvert(sag.sagBrugerÆndringTimestamp)
+        document.getElementById('hvem-har-sagen-brugernavn').textContent = sag.sagBrugerÆndringBrugerNavn
+      })
   },
 
   updateColorTheme: () => {
