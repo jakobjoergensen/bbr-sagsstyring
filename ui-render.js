@@ -523,6 +523,7 @@ const UIRender = {
         document.getElementById('hvem-har-sagen-timestamp').textContent = fn.datoConvert(sag.sagBrugerÆndringTimestamp)
         document.getElementById('hvem-har-sagen-brugernavn').textContent = sag.sagBrugerÆndringBrugerNavn
       })
+      .catch(error => { console.log(error)} )
   },
 
   updateColorTheme: () => {

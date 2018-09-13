@@ -59,7 +59,7 @@ app.on('ready', async () => {
       Menu.setApplicationMenu(mainMenu)
 
       // Check for updates
-      // setTimeout(updater.check, 2000)
+      setTimeout(updater.check, 2000)
 
     } else {
 

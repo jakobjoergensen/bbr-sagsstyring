@@ -2,7 +2,7 @@
   "name": "bbr-sagsstyring-app",
   "version": "2018.5.2",
   "description": "",
-  "author": "Jakob Jørgensen, Aarhus Kommune",
+  "author": "Jakob Jørgensen",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
