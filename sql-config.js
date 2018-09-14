@@ -1,12 +1,8 @@
 
-// const SQLConfig = {
-//     connectionString: `Server=${server};Database=${database};user=aztmbjj;Password=7ureTAKE`
-// }
-
 const SQLConfig = {
     server: 'srvsql29',
     database: 'BBRsagsstyring',
-    driver: 'msnodesqlv8',
+    driver: 'SQL Server Native Client 11.0', //'msnodesqlv8',
     options: {
         trustedConnection: true
     }
