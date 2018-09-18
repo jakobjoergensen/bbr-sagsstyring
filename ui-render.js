@@ -228,7 +228,7 @@ const UIRender = {
               tdValue = item.sagsnummer
 
             if (column === 'esdh')
-              td.textContent = item.esdh
+              tdValue = item.esdh
 
             if (column === 'datoModtaget') {
               tdValue = fn.datoConvert(item.datoModtaget).toString() || null
@@ -263,7 +263,7 @@ const UIRender = {
 
 
             // Aktiver highlight ved søgeresultater for udvalgte kolonner
-            const searchColumns = ['sagsnummer', 'adresse', 'sagsindhold', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet']
+            const searchColumns = ['sagsnummer', 'esdh', 'adresse', 'sagsindhold', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet']
             if (searchColumns.find(x => x === column) !== undefined && tdValue !== null) {
               td.innerHTML = tdValue.replace(regex, str => `<span class="yellow black-text"><b>${str}</b></span>`)
             }

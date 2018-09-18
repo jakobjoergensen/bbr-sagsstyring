@@ -67,8 +67,8 @@ const DBCtrl = (() => {
 
 
     // Generel quries
-    get: (view, ID = '') => {
-     
+    get: (view, ID = null) => {
+      
       let query
 
       switch (view) {
@@ -151,6 +151,9 @@ const DBCtrl = (() => {
                   FROM view_sagOpfølgningNY
                   LEFT JOIN markering ON view_sagOpfølgningNY.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
         break
+
+        case 'alle':
+          query = `SELECT * FROM view_sagAktuelAlle WHERE sagsnummer LIKE '%${ID}%' OR esdh LIKE '%${ID}%' OR datoModtaget LIKE '%${ID}%' OR datoAfgørelse LIKE '%${ID}%' OR datoAfsluttet LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
 
       }
       

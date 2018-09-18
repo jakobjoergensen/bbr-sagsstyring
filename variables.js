@@ -60,6 +60,16 @@ const listeDef = [
     toggle_opfølgningssager: true,
     searchString: '',
     columns: [SYSTEM_BUTTON_OVERFØR,'brugerNavn', 'flow', 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+  },
+  {
+    listeID: 6,
+    headline: 'Alle sager',
+    listeNavn: 'alle',
+    sortColumn: 'sagsnummer',
+    sortDirection: 'asc',
+    toggle_opfølgningssager: true,
+    searchString: '',
+    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   }
 ]
 

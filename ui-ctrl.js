@@ -470,31 +470,56 @@ const UICtrl = (() => {
   })
 
 
+  // Alle sager
+  document.getElementById('navAlleSager').addEventListener('click', e => {
+    e.preventDefault()
+
+    liste.selected = 6
+
+    // Fjern gammel table
+    UIRender.deleteChildren('data-content')
+
+    UIRender.renderListViewTable()
+    UIRender.renderListViewHeadlines()
+  })
+
+
   // ************************ SØGEBOKS ****************************************************************
   let searchDelay
   document.getElementById('search').addEventListener('keyup', e => {
+    
+    let delayTime = 500
+    if (liste.selected === 6)
+      delayTime = 1000
 
     // Hvis der ikke er valgt en liste, gør intet
     if (liste.selected === null)
       return false
 
-    // ... ellers gå vidre med søgning
-    const inputValue = e.target.value
 
+    // ... ellers gå videre med søgning
     if (searchDelay)
       clearTimeout(searchDelay)
 
     searchDelay = setTimeout(() => {
+
+
       // Registrer søgeord
-      listeDef[liste.selected].searchString = inputValue
+      listeDef[liste.selected].searchString = e.target.value
+
       // Fjern indhold fra gammel table
       UIRender.deleteChildren('tbody')
 
-      // indlæs liste igen
-      UIRender.renderListView()
+      // Hvis det er listen med alle sager
+      if (liste.selected === 6) {
+        UICtrl.listeInit(6, e.target.value)
+      } else {
+        // indlæs liste igen
+        UIRender.renderListView()
+      }
 
 
-    }, 500)
+    }, delayTime)
     
   })
 
@@ -601,7 +626,7 @@ const UICtrl = (() => {
       }
     },
 
-
+    // ------------------------------------------------------------------------------------------------------------------------------------------
     loadPageSettings: () => {
       const contentArea = document.getElementById('data-content')
 
@@ -785,10 +810,14 @@ const UICtrl = (() => {
     },
 
     // ***********************************************************************************************************************
-    listeInit: (listeID) => {
+    listeInit: (listeID, searchCriteria = null) => {
       liste.selected = listeID
-      UIRender.clearSearchBox()
-      UICtrl.listeVisning()
+
+      if (liste.selected !== 6)
+        UIRender.clearSearchBox()
+      
+      
+      UICtrl.listeVisning(searchCriteria)
       UICtrl.listeOptions()
     },
     
@@ -796,7 +825,7 @@ const UICtrl = (() => {
     // ***
     // Generel method som benyttes til at kalde methods på UIRender til visning af lister.
     // ***
-    listeVisning: () => {
+    listeVisning: (searchCriteria = null) => {
 
       // Vis progress bar
       UIRender.renderProgressBar()
@@ -808,10 +837,11 @@ const UICtrl = (() => {
       UIRender.renderListViewHeadlines()
 
       // hent data
-      DBCtrl.get(listeDef[liste.selected].listeNavn)
+      DBCtrl.get(listeDef[liste.selected].listeNavn, searchCriteria)
         .then(result => {
           
           liste.items = result
+
           // sæt value på toggle opfølgningssager
           document.getElementById('opfølgningssagerToggle').children[0].firstChild.nextSibling.checked = listeDef[liste.selected].toggle_opfølgningssager
     
