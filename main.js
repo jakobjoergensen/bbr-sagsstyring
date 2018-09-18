@@ -42,8 +42,8 @@ app.on('ready', async () => {
         width: 1400,
         height: 1000,
         webPreferences: {
-          //devTools: false
-          devTools: true,
+          devTools: false,
+          // devTools: true,
           allowRunningInsecureContent: false
         }
       })

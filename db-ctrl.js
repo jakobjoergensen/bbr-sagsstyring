@@ -159,6 +159,7 @@ const DBCtrl = (() => {
       
       // kør forespørgsel
       if (query) {
+        
         return getData(query)
           .then(result => {
             const populatedItems = ItemCtrl.populateItemList(result)

@@ -235,15 +235,26 @@ const UIRender = {
               td.className = 'center-align'
             }
 
+
             if (column === 'datoAfgørelse') {
-              tdValue = fn.datoConvert(item.datoAfgørelse).toString() || null
+              tdValue = null
+
+              if (item.datoAfgørelse !== null)
+                tdValue = fn.datoConvert(item.datoAfgørelse).toString()
+
               td.className = 'center-align'
             }
 
+
             if (column === 'datoAfsluttet') {
-              tdValue = fn.datoConvert(item.datoAfsluttet).toString() || null
+              tdValue = null
+
+              if (item.datoAfsluttet !== null)
+                tdValue = fn.datoConvert(item.datoAfsluttet).toString()
+              
               td.className = 'center-align'
             }
+
 
             if (column === 'adresse') {
               tdValue = item.adresse
