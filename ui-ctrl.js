@@ -145,7 +145,6 @@ const UICtrl = (() => {
         
         // Hent eventuelle BBR notater
         .then(sag => {
-          
           return DBCtrl.getBBRNotater(id)
 
             .then(data => {
@@ -474,20 +473,26 @@ const UICtrl = (() => {
   document.getElementById('navAlleSager').addEventListener('click', e => {
     e.preventDefault()
 
-    liste.selected = 6
+    // liste.selected = 6
+
+    UICtrl.listeInit(6)
 
     // Fjern gammel table
-    UIRender.deleteChildren('data-content')
-
-    UIRender.renderListViewTable()
-    UIRender.renderListViewHeadlines()
+    // UIRender.deleteChildren('data-content')
+    
+    // UIRender.renderListViewTable()
+    // UIRender.renderListViewHeadlines()
   })
 
 
   // ************************ SØGEBOKS ****************************************************************
   let searchDelay
+    
+  
   document.getElementById('search').addEventListener('keyup', e => {
     
+    const input = e.target.value
+
     let delayTime = 500
     if (liste.selected === 6)
       delayTime = 1000
@@ -505,14 +510,24 @@ const UICtrl = (() => {
 
 
       // Registrer søgeord
-      listeDef[liste.selected].searchString = e.target.value
+      listeDef[liste.selected].searchString = input
 
       // Fjern indhold fra gammel table
       UIRender.deleteChildren('tbody')
 
       // Hvis det er listen med alle sager
       if (liste.selected === 6) {
-        UICtrl.listeInit(6, e.target.value)
+        
+        // Hvis der er skrevet et søgekriterie, genindlæs liste med dette kriterie
+        if (input !== '') {
+          UICtrl.listeInit(6, input)
+        }
+
+        // Hvis søgekriteriet er tomt, fjern liste (men genindlæs IKKE et resultat med en tom søgestreng - dette vil vise alle sager, og det tager laaang tid at indlæse)
+        if (input === '') {
+          UICtrl.listeInit(6, null)
+        }
+        
       } else {
         // indlæs liste igen
         UIRender.renderListView()
@@ -812,15 +827,33 @@ const UICtrl = (() => {
     // ***********************************************************************************************************************
     listeInit: (listeID, searchCriteria = null) => {
       liste.selected = listeID
-
-      if (liste.selected !== 6)
+      
+      // Ryd evt. tidligere søgning, hvis det IKKE er listen med alle sager
+      if (liste.selected !== 6) {
         UIRender.clearSearchBox()
+        UICtrl.clearSearchString()
+      }
       
+      // Hvis det ikke er listen med alle sager eller hvis det er listen med alle sager hvor der er angivet et søgekriterie, indlæs som normalt
+      if (liste.selected !== 6 || searchCriteria !== null)
+        UICtrl.listeVisning(searchCriteria)
       
-      UICtrl.listeVisning(searchCriteria)
+      // Hvis det er listen med alle sager og der ikke er angivet et søgekriterie, indlæs blot overskrifter
+      if (liste.selected === 6 && searchCriteria === null) {
+        // Fjern gammel table
+        UIRender.deleteChildren('data-content')
+        // Indlæs overskrifter
+        UIRender.renderListViewTable()
+        UIRender.renderListViewHeadlines()
+      }
+
       UICtrl.listeOptions()
     },
     
+    clearSearchString: () => {
+      listeDef[liste.selected].searchString = ''
+    },
+
     // ***********************************************************************************************************************
     // ***
     // Generel method som benyttes til at kalde methods på UIRender til visning af lister.

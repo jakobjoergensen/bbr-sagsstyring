@@ -106,7 +106,8 @@ const NavCtrl = {
 
     // Indlæs farvetemaet
     UIRender.updateColorTheme()
-          
+      
+    
     // åbn startside
     UICtrl.listeInit(bruger.settings.opstartsside)
         
