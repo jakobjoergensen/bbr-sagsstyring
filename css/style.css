@@ -1,10 +1,33 @@
 body {
-  font-size: 12px
+  font-size: 14px;
+  font-family: 'Open Sans';
+  font-weight: 400;
 }
 
-table {
-  font-size: 13px;
+/* Table */
+thead th:hover {
+  cursor: pointer;
 }
+
+tr td {
+  border-right: 1px solid  rgba(0,0,0,.03) !important;
+  font-size: 14px;
+}
+
+tr th {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+tr td:last-child {
+  border-right: none !important;
+}
+
+tr:hover {
+  cursor: pointer;
+}
+
+
 
 a.btn {
   margin-top: 5px;
@@ -23,6 +46,8 @@ a.btn {
   color: #0d47a1;
 }
 
+
+/* Progress preloader spinner */
 #progress-fixed {
   position: relative;
   z-index: 801;
@@ -46,6 +71,9 @@ a.btn {
   top: 47%;
   left: 47%;
 }
+
+
+
 
 .dropdown-content li:hover {
   background-color: #039be5;
@@ -306,21 +334,7 @@ ul.dropdown-content.grey li:hover {
 }
 
 
-thead th:hover {
-  cursor: pointer;
-}
 
-tr td {
-  border-right: 1px solid  rgba(0,0,0,.03) !important;
-}
-
-tr td:last-child {
-  border-right: none !important;
-}
-
-tr:hover {
-  cursor: pointer;
-}
 
 
 
