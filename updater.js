@@ -49,7 +49,7 @@ exports.check = () => {
         resizable: false
       })
 
-      progressWindow.loadURL(`file://${__dirname}/renderer/progress.html`)
+      progressWindow.loadURL(`file://${__dirname}/renderer/update-progress.html`)
 
       // Handle win close
       progressWindow.on('closed', () => progressWindow = null)
@@ -62,6 +62,7 @@ exports.check = () => {
       // Track download progress on autoupdater
       autoUpdater.on('download-progress', d => {
         downloadProgress = d.percent
+        console.log('Progress: '+ d.percent)
       })
 
       // Listen for completed update download
@@ -71,17 +72,9 @@ exports.check = () => {
         if (progressWindow)
           progressWindow.close()
 
-        // Prompt user to quit and install update
-        dialog.showMessageBox({
-          type: 'info',
-          title: 'Opdatering hentet',
-          message: 'Den nye version af BBR-sagsstyring er hentet og klar. Vil du installere opdateringen nu?',
-          buttons: ['Ja']
-        }, buttonIndex => {
-          // Update if 'ja'
-          if (buttonIndex === 0)
-            autoUpdater.quitAndInstall()
-        })
+        // Quit and install update
+        autoUpdater.quitAndInstall()
+
       })
     })
   })
