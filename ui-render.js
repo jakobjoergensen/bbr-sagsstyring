@@ -100,7 +100,7 @@ const UIRender = {
       }
 
       if (column === 'antalBBRnotater') {
-        th.textContent = 'Antal BBR notater'
+        th.textContent = 'BBR notater'
         th.classList.add('center')
       }
 
@@ -110,11 +110,20 @@ const UIRender = {
       if (column === 'brugerNavn')
         th.textContent = 'Ligger hos'
 
-      if (column === 'sagsnummer')
+      if (column === 'sagsnummer') {
         th.textContent = 'Sagsnummer'
+        th.className = 'center-align'
+      }
+      
+        if (column === 'ejendomsnummer') {
+          th.textContent = 'Ejd.nr.'
+          th.className = 'center-align'
+        }
 
-      if (column === 'esdh')
+      if (column === 'esdh') {
         th.textContent = 'ESDH'
+        th.className = 'center-align'
+      }
 
       if (column === 'datoModtaget')
         th.textContent = 'Modtagelsesdato'
@@ -224,11 +233,21 @@ const UIRender = {
             if (column === 'brugerNavn')
               td.textContent = item.brugerNavn
 
-            if (column === 'sagsnummer')
+            if (column === 'sagsnummer') {
               tdValue = item.sagsnummer
+              td.className = 'center-align'
+            }
+            
+            if (column === 'ejendomsnummer') {
+              td.textContent = item.ejendomsnummer
+              td.className = 'center-align'
+            }
+            
 
-            if (column === 'esdh')
+            if (column === 'esdh') {
               tdValue = item.esdh
+              td.className = 'center-align'
+            }
 
             if (column === 'datoModtaget') {
               tdValue = fn.datoConvert(item.datoModtaget).toString() || null

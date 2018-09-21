@@ -26,8 +26,8 @@ module.exports = [
       { label: 'Klip', role: 'cut' },
       { type: 'separator' },
       { label: 'Sæt ind', role: 'paste' },
-      // { role: 'toggleDevTools'},
-      // { role: 'reload' }
+      { role: 'toggleDevTools'},
+      { role: 'reload' }
     ]
   },
   {

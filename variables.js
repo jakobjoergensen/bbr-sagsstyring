@@ -9,7 +9,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: ['flow', 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+    columns: ['flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   },
   {
     listeID: 1,
@@ -19,7 +19,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: [SYSTEM_BUTTON_OVERFØR, 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+    columns: [SYSTEM_BUTTON_OVERFØR, 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   },
   {
     listeID: 2,
@@ -29,7 +29,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: [SYSTEM_BUTTON_OVERFØR,'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+    columns: [SYSTEM_BUTTON_OVERFØR, 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   },
   {
     listeID: 3,
@@ -39,7 +39,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: [SYSTEM_BUTTON_OVERFØR,'brugerNavn', 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   },
   {
     listeID: 4,
@@ -49,7 +49,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: [SYSTEM_BUTTON_OVERFØR,'brugerNavn', 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   },
   {
     listeID: 5,
@@ -59,7 +59,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: [SYSTEM_BUTTON_OVERFØR,'brugerNavn', 'flow', 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   },
   {
     listeID: 6,
@@ -69,7 +69,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
+    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler', 'sagsart', 'politiskKategori']
   }
 ]
 
