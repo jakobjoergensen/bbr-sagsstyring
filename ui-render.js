@@ -1,7 +1,13 @@
+// Node modules
+const truncate = require('truncate')
+const escapeStringRegExp = require('escape-string-regexp')
+
+// App modules
 const { fn } = require('./functions')
 const { listeDef, currentSag, blurElements, colorThemes } = require('./variables')
 let { liste } = require('./variables')
-const escapeStringRegExp = require('escape-string-regexp')
+
+// Variables
 const flows = ['Afventer afgørelsesdato','Tilladelsessag','Afslutningssag','Færdigbehandlet','Færdigbehandlet tilladelsessag, afventer afslutningsdato']
 
 
@@ -115,10 +121,10 @@ const UIRender = {
         th.className = 'center-align'
       }
       
-        if (column === 'ejendomsnummer') {
-          th.textContent = 'Ejd.nr.'
-          th.className = 'center-align'
-        }
+      if (column === 'ejendomsnummer') {
+        th.textContent = 'Ejd.nr.'
+        th.className = 'center-align'
+      }
 
       if (column === 'esdh') {
         th.textContent = 'ESDH'
@@ -276,11 +282,11 @@ const UIRender = {
 
 
             if (column === 'adresse') {
-              tdValue = item.adresse
+              tdValue = truncate(item.adresse, 35)
             }
 
             if (column === 'sagsindhold')
-              tdValue = item.sagsindhold
+              tdValue = truncate(item.sagsindhold, 50)
 
             if (column === 'sagsbehandler')
               td.textContent = item.sagsbehandler

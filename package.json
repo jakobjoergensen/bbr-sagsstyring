@@ -16,7 +16,8 @@
     "electron-updater": "^3.1.1",
     "escape-string-regexp": "^1.0.5",
     "msnodesqlv8": "^0.6.8",
-    "mssql": "^4.1.0"
+    "mssql": "^4.1.0",
+    "truncate": "^2.0.1"
   },
   "devDependencies": {
     "electron": "^2.0.3",
