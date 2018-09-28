@@ -220,6 +220,31 @@ const DBCtrl = (() => {
       return getData(query)
     },
 
+    getFærdigbehandlingerTilladelse: sagID => {
+      query = `SELECT
+              brugerID,
+              brugerNavn,
+              timestampFærdigbehandletTilladelse        
+              FROM view_sagerFærdigbehandletTilladelseNY
+              WHERE sagID = '${sagID}'
+              ORDER BY timestampFærdigbehandletTilladelse DESC
+              `
+
+      return getData(query)
+    },
+
+    getFærdigbehandlingerAfsluttet: sagID => {
+      query = `SELECT
+              brugerID,
+              brugerNavn,
+              timestampFærdigbehandletAfsluttet        
+              FROM view_sagerFærdigbehandletAfsluttetNY
+              WHERE sagID = '${sagID}'
+              ORDER BY timestampFærdigbehandletAfsluttet DESC
+              `
+
+      return getData(query)
+    },
 
 
     execStoredProcedure: (procedure, params, output = null) => {

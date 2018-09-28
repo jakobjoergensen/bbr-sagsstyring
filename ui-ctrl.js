@@ -167,6 +167,31 @@ const UICtrl = (() => {
             })
         })
 
+        // Hent array med færdigbehandlede tilladelse for den pågældende sag
+        // (der kan i princippet være flere, da en sag i BBR fordeles til de individuelle entiteter SOM SELVSTÆNDIGE SAGER MED SAMME SAGSNUMMER!)      
+        .then(sag => {
+          return DBCtrl.getFærdigbehandlingerTilladelse(id)
+            .then(data => {
+              if (data)
+                sag[0].færdigbehandletTilladelse = data
+
+              return sag
+            })
+        })
+        
+        // Hent array med færdigbehandlede afslutningssager for den pågældende sag
+        // (der kan i princippet være flere, da en sag i BBR fordeles til de individuelle entiteter SOM SELVSTÆNDIGE SAGER MED SAMME SAGSNUMMER!)      
+        .then(sag => {
+          return DBCtrl.getFærdigbehandlingerAfsluttet(id)
+
+            .then(data => {
+              if (data)
+                sag[0].færdigbehandletAfsluttet = data
+
+              return sag
+            })
+        })
+        
         // Indlæs data i DOM elementer
         .then(sag => {
           UIRender.renderSag(sag[0])
@@ -315,18 +340,13 @@ const UICtrl = (() => {
 
   // --------------------------------------------------------------------------------------------------------------
   // Listener: Gemme færdigbehandling af tilladelsessag -----------------------------------------------------------
-  document.getElementById('færdigbehandling-tilladelsessag').addEventListener('change', () => {
+  document.getElementById('færdigbehandling-tilladelsessag').addEventListener('click', () => {
     
-    const value = document.getElementById('færdigbehandling-tilladelsessag').checked
-
-    // sæt parameter til brug i stored procedure til enten 0 eller 1 alt afhængig af om der er afkrydset eller ej
-    // begge afkrydsningsfelter skal sendes med til stored procedure
-    const checked = value === true ? 1 : 0
-
+    // sæt parameter til brug i stored procedure til 1
     const params = [
       ['sagID', Number(currentSag.sagID)],
       ['brugerID', Number(bruger.ID)],
-      ['checked', Number(checked)]
+      ['checked', 1]
     ]
     
     DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingTilladelse', params)
@@ -335,34 +355,35 @@ const UICtrl = (() => {
         const card = document.getElementById('card-færdigbehandling-tilladelse')
         fn.saveHighlight(card)
 
-        // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
-        UICtrl.listeInit(liste.selected)
-        UIRender.updateCounters()
+        setTimeout(() => {
+          
+          // Hent den ændrede sag
+          DBCtrl.getFærdigbehandlingerTilladelse(currentSag.sagID)
+            .then(data => {
+              
+              const sag = { færdigbehandletTilladelse: data}
+              UIRender.færdigbehandletTilladelse(sag)
+              
+              // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
+              UICtrl.listeInit(liste.selected)
+              UIRender.updateCounters()
+            })
+            .catch(error => { console.log(error) })
+
+        }, 500)
         
-        // Hent den ændrede sag
-        DBCtrl.get('sag',currentSag.sagID)
-          .then(updatedSag => {
-            // Timestamp og navn
-            document.getElementById('færdigbehandlet-tilladelsessag-label').textContent = updatedSag[0].timestampFærdigbehandletTilladelse === null ? null : `${fn.datoConvert(updatedSag[0].timestampFærdigbehandletTilladelse)} ${updatedSag[0].færdigbehandletTilladelseBrugerNavn}`
-          })
-          .catch(error => { console.log(error) })
       })
   })
 
   // -------------------------------------------------------------------------------------------------------------
   // Gemme færdigbehandling af afslutningssag --------------------------------------------------------------------
-  document.getElementById('færdigbehandling-afslutningssag').addEventListener('change', () => {
+  document.getElementById('færdigbehandling-afslutningssag').addEventListener('click', () => {
 
-    const value = document.getElementById('færdigbehandling-afslutningssag').checked
-
-    // sæt parameter til brug i stored procedure til enten 0 eller 1 alt afhængig af om der er afkrydset eller ej
-    // begge afkrydsningsfelter skal sendes med til stored procedure
-    const checked = value === true ? 1 : 0
-
+    // sæt parameter til brug i stored procedure til 1
     const params = [
       ['sagID', Number(currentSag.sagID)],
       ['brugerID', Number(bruger.ID)],
-      ['checked', Number(checked)]
+      ['checked', 1]
     ]
 
     DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingAfslutning', params)
@@ -371,18 +392,16 @@ const UICtrl = (() => {
         const card = document.getElementById('card-færdigbehandling-afslutning')
         fn.saveHighlight(card)
 
-        // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
-        UICtrl.listeInit(liste.selected)
-        UIRender.updateCounters()
-        
-        // Hent den ændrede sag
-        DBCtrl.get('sag', currentSag.sagID)
-          .then(updatedSag => {
-            // Timestamp og navn
-            document.getElementById('færdigbehandlet-afslutningssag-label').textContent = updatedSag[0].timestampFærdigbehandletAfslutning === null ? null : `${fn.datoConvert(updatedSag[0].timestampFærdigbehandletAfslutning)} ${updatedSag[0].færdigbehandletAfslutningBrugerNavn}`
-          })
-          .catch(error => { console.log(error) })
-        
+        setTimeout(() => {
+          // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
+          UICtrl.listeInit(liste.selected)
+          UIRender.updateCounters()
+
+          // Luk modal vindue
+          modal.close()
+        }, 500)
+
+          
       })
   })
 

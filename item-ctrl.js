@@ -43,7 +43,9 @@ const ItemCtrl = (() => {
           BBRnotater: item.BBRnotater || {},
           note: item.note || null,
           sagBrugerÆndringTimestamp: item.sagBrugerÆndringTimestamp || null,
-          sagBrugerÆndringBrugerNavn: item.sagBrugerÆndringBrugerNavn || null
+          sagBrugerÆndringBrugerNavn: item.sagBrugerÆndringBrugerNavn || null,
+          færdigbehandletTilladelse: [],
+          færdigbehandletAfsluttet: []
         }
   
         populatedItemList.push(newItem)

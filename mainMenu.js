@@ -25,9 +25,9 @@ module.exports = [
       { label: 'Kopiér', role: 'copy' },
       { label: 'Klip', role: 'cut' },
       { type: 'separator' },
-      { label: 'Sæt ind', role: 'paste' }
-      // { role: 'toggleDevTools'},
-      // { role: 'reload' }
+      { label: 'Sæt ind', role: 'paste' },
+      { role: 'toggleDevTools'},
+      { role: 'reload' }
     ]
   },
   {

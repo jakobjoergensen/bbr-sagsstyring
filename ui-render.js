@@ -397,10 +397,6 @@ const UIRender = {
     const element_sagsbehandler = document.getElementById('sagsbehandler')
     const element_adresse = document.getElementById('adresse')
     const element_sagsindhold = document.getElementById('sagsindhold')
-    const element_færdigbehandletTilladelsessag = document.getElementById('færdigbehandling-tilladelsessag')
-    const element_færdigbehandletTilladelsessagLabel = document.getElementById('færdigbehandlet-tilladelsessag-label')
-    const element_færdigbehandletAfslutningssag = document.getElementById('færdigbehandling-afslutningssag')
-    const element_færdigbehandletAfslutningsagLabel = document.getElementById('færdigbehandlet-afslutningssag-label')
 
     // Indlæs data i DOM elementer
     element_sagsnummer.textContent = sag.sagsnummer || null
@@ -415,65 +411,10 @@ const UIRender = {
     element_adresse.textContent = sag.adresse || null
     element_sagsindhold.textContent = sag.sagsindhold || null
 
-    // Færdigbehandlet tilladelsessag ************************************************************************************
-    // Fjern alt indhold i færdigbehandlet tilladelsessag label
-    while (element_færdigbehandletTilladelsessagLabel.firstChild)
-      element_færdigbehandletTilladelsessagLabel.removeChild(element_færdigbehandletTilladelsessagLabel.firstChild)
-
-    // Hvis det er SYSTEM, sæt et em-tag og undlad at skrive dato
-    if (sag.færdigbehandletTilladelseBrugerNavn === 'SYSTEM') {
-      const em = document.createElement('em')
-      em.textContent = 'Udført før sagsstyringssystem'
-      element_færdigbehandletTilladelsessagLabel.appendChild(em)
-
-    } else {
-      // Hvis det er person
-        element_færdigbehandletTilladelsessagLabel.textContent = sag.timestampFærdigbehandletTilladelse ? `${fn.datoConvert(sag.timestampFærdigbehandletTilladelse)} ${sag.færdigbehandletTilladelseBrugerNavn}` : null
-    }
-
-    // Sæt tilstand på checkbox - færdigbehandlet tilladelsessag
-    if (sag.timestampFærdigbehandletTilladelse) {
-      element_færdigbehandletTilladelsessag.checked = true
-      element_færdigbehandletTilladelsessag.setAttribute('disabled', true)
-    } else {
-      // element_færdigbehandletTilladelsessag.removeAttribute('checked')
-      element_færdigbehandletTilladelsessag.checked = false
-      element_færdigbehandletTilladelsessag.removeAttribute('disabled')
-    }
-
-
-    // Færdigbehandlet afslutningssag ************************************************************************************
-    // Fjern alt indhold i færdigbehandlet tilladelsessag label
-    while (element_færdigbehandletAfslutningsagLabel.firstChild)
-      element_færdigbehandletAfslutningsagLabel.removeChild(element_færdigbehandletAfslutningsagLabel.firstChild)
-
-    // Hvis det er SYSTEM, sæt et em-tag og undlad at skrive dato
-    if (sag.færdigbehandletAfslutningBrugerNavn === 'SYSTEM') {
-      const em = document.createElement('em')
-      em.textContent = 'Udført før sagsstyringssystem'
-      element_færdigbehandletAfslutningsagLabel.appendChild(em)
-
-    } else {
-      // Hvis det er person
-        element_færdigbehandletAfslutningsagLabel.textContent = sag.timestampFærdigbehandletAfslutning ? `${fn.datoConvert(sag.timestampFærdigbehandletAfslutning)} ${sag.færdigbehandletAfslutningBrugerNavn}` : null
-    }
-
-    // Sæt tilstand på checkbox - færdigbehandlet tilladelsessag
-    if (sag.timestampFærdigbehandletAfslutning) {
-      element_færdigbehandletAfslutningssag.checked = true
-      element_færdigbehandletAfslutningssag.setAttribute('disabled', true)
-    } else {
-      element_færdigbehandletAfslutningssag.checked = false
-      element_færdigbehandletAfslutningssag.removeAttribute('disabled')
-    }
-
-
-    // Hvem har sagen? **************************************************************************************************
-    UIRender.renderHvemHarSagen()
-
     
-
-
+    UIRender.renderHvemHarSagen()
+    UIRender.færdigbehandletTilladelse(sag)
+    UIRender.færdigbehandletAfsluttet(sag)
 
     // BBR notater **************************************************************************************************
     const tbody = document.getElementById('bbrNotater-tbody')
@@ -521,6 +462,52 @@ const UIRender = {
       radioGroup[sag.color].checked = true
     }
   },
+
+  færdigbehandletTilladelse: (sag) => {
+    const element_færdigbehandletTilladelsessagItems = document.getElementById('færdigbehandlet-tilladelsessag-items')
+
+    // Fjern alt indhold i færdigbehandlet afsluttet div
+    while (element_færdigbehandletTilladelsessagItems.firstChild)
+      element_færdigbehandletTilladelsessagItems.removeChild(element_færdigbehandletTilladelsessagItems.firstChild)
+
+    for (let i = 0; i < sag.færdigbehandletTilladelse.length; i++) {
+      const rowElement = document.createElement('div')
+
+      // Hvis det er SYSTEM, sæt et em-tag og undlad at skrive dato
+      if (sag.færdigbehandletTilladelse[i].brugerID === 12) {
+        rowElement.textContent = '00-00-0000 Udført før sagsstyringssystem'
+      } else {
+        // Hvis det er person
+        rowElement.textContent = `${fn.datoConvert(sag.færdigbehandletTilladelse[i].timestampFærdigbehandletTilladelse)} ${sag.færdigbehandletTilladelse[i].brugerNavn}`
+      }
+
+      element_færdigbehandletTilladelsessagItems.appendChild(rowElement)
+    }
+  },
+
+  færdigbehandletAfsluttet: (sag) => {
+
+    const element_færdigbehandletAfslutningssagItems = document.getElementById('færdigbehandlet-afslutningssag-items')
+    
+    // Fjern alt indhold i færdigbehandlet afsluttet div
+    while (element_færdigbehandletAfslutningssagItems.firstChild)
+      element_færdigbehandletAfslutningssagItems.removeChild(element_færdigbehandletAfslutningssagItems.firstChild)
+
+    for (let i = 0; i < sag.færdigbehandletAfsluttet.length; i++) {
+      const rowElement = document.createElement('div')
+
+      // Hvis det er SYSTEM, sæt et em-tag og undlad at skrive dato
+      if (sag.færdigbehandletAfsluttet[i].brugerID === 12) {
+        rowElement.textContent = '00-00-0000 Udført før sagsstyringssystem'
+      } else {
+        // Hvis det er person
+        rowElement.textContent = `${fn.datoConvert(sag.færdigbehandletAfsluttet[i].timestampFærdigbehandletAfsluttet)} ${sag.færdigbehandletAfsluttet[i].brugerNavn}`
+      }
+
+      element_færdigbehandletAfslutningssagItems.appendChild(rowElement)
+    }
+  },
+
 
   renderHvemHarSagen: () => {
     

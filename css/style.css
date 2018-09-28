@@ -28,6 +28,10 @@ tr:hover {
 }
 
 
+#færdigbehandlet-afslutningssag-items div,
+#færdigbehandlet-tilladelsessag-items div {
+  font-size:12px;
+}
 
 a.btn {
   margin-top: 5px;
