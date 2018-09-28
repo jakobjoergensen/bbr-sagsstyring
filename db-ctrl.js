@@ -46,7 +46,7 @@ const DBCtrl = (() => {
           break
 
           case 'countTildeltAfsluttet':
-            query = 'SELECT COUNT(*) count FROM view_sagTildeltAfsluttet'
+            query = 'SELECT COUNT(*) count FROM view_sagTildeltAfsluttetNY2'
           break
 
           case 'countTildelt':
@@ -54,7 +54,7 @@ const DBCtrl = (() => {
           break
 
           case 'countOpfølgningsliste':
-            query = 'SELECT COUNT(*) count FROM view_sagOpfølgningNY'
+            query = 'SELECT COUNT(*) OVER() count FROM view_sagOpfølgningNY GROUP BY sagID'
           break
 
         }
@@ -104,12 +104,12 @@ const DBCtrl = (() => {
 
         case 'tildeltAfsluttet':
           query = `SELECT
-                    view_sagTildeltAfsluttet.*
+                    view_sagTildeltAfsluttetNY2.*
                     ,markering.color
                   FROM
-                    view_sagTildeltAfsluttet
-                    LEFT JOIN markering ON view_sagTildeltAfsluttet.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagTildeltAfsluttet.datoAfsluttet`
+                    view_sagTildeltAfsluttetNY2
+                    LEFT JOIN markering ON view_sagTildeltAfsluttetNY2.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                  ORDER BY view_sagTildeltAfsluttetNY2.datoAfsluttet`
         break
 
         case 'tildelt':
@@ -145,8 +145,25 @@ const DBCtrl = (() => {
         break
 
         case 'opfølgningsliste':
-          query = `SELECT
-                  view_sagOpfølgningNY.*
+          query = `SELECT DISTINCT
+                  view_sagOpfølgningNY.sagID
+                  ,view_sagOpfølgningNY.referenceStructura
+                  ,view_sagOpfølgningNY.ejendomsnummer
+                  ,view_sagOpfølgningNY.sagsnummer
+                  ,view_sagOpfølgningNY.esdh
+                  ,view_sagOpfølgningNY.datoModtaget
+                  ,view_sagOpfølgningNY.datoAfgørelse
+                  ,view_sagOpfølgningNY.datoAfsluttet
+                  ,view_sagOpfølgningNY.sagsbehandler
+                  ,view_sagOpfølgningNY.sagsartKode
+                  ,view_sagOpfølgningNY.sagsart
+                  ,view_sagOpfølgningNY.politiskKategoriKode
+                  ,view_sagOpfølgningNY.politiskKategori
+                  ,view_sagOpfølgningNY.adresse
+                  ,view_sagOpfølgningNY.sagsindhold
+                  ,view_sagOpfølgningNY.afslutningstekstID
+                  ,view_sagOpfølgningNY.flow
+                  ,view_sagOpfølgningNY.tildeltBrugerNavn
                   ,markering.color
                   FROM view_sagOpfølgningNY
                   LEFT JOIN markering ON view_sagOpfølgningNY.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
