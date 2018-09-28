@@ -101,6 +101,14 @@ const colorThemes = [
 
 let colorThemeSelected = 1
 
+const flows = [
+    'Afventer afgørelsesdato', // 0
+    'Tilladelsessag', // 1
+    'Afslutningssag', // 2
+    'Færdigbehandlet', // 3
+    'Afventer afslutningsdato', // 4
+    'Afslutningssag, delvis færdigbehandlet' // 5
+  ]
 
 
 module.exports = {
@@ -109,5 +117,6 @@ module.exports = {
   currentSag,
   blurElements,
   colorThemes,
-  colorThemeSelected
+  colorThemeSelected,
+  flows
 }

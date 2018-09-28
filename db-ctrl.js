@@ -38,7 +38,7 @@ const DBCtrl = (() => {
           break
 
           case 'countIkkeTildeltAfsluttet':
-            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltAfsluttet'
+            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltAfsluttetNY2'
           break
 
           case 'countTildeltTilladelse':
@@ -84,12 +84,12 @@ const DBCtrl = (() => {
 
         case 'ikkeTildeltAfsluttet':
           query = `SELECT
-                    view_sagIkkeTildeltAfsluttet.*
+                    view_sagIkkeTildeltAfsluttetNY2.*
                     ,markering.color
                   FROM
-                    view_sagIkkeTildeltAfsluttet
-                    LEFT JOIN markering ON view_sagIkkeTildeltAfsluttet.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagIkkeTildeltAfsluttet.datoAfsluttet`
+                    view_sagIkkeTildeltAfsluttetNY2
+                    LEFT JOIN markering ON view_sagIkkeTildeltAfsluttetNY2.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                  ORDER BY view_sagIkkeTildeltAfsluttetNY2.datoAfsluttet`
         break
 
         case 'tildeltTilladelse':
@@ -153,7 +153,7 @@ const DBCtrl = (() => {
         break
 
         case 'alle':
-          query = `SELECT * FROM view_sagAktuelAlle WHERE sagsnummer LIKE '%${ID}%' OR esdh LIKE '%${ID}%' OR datoModtaget LIKE '%${ID}%' OR datoAfgørelse LIKE '%${ID}%' OR datoAfsluttet LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
+          query = `SELECT * FROM view_sagAktuelAlleNY2 WHERE sagsnummer LIKE '%${ID}%' OR esdh LIKE '%${ID}%' OR datoModtaget LIKE '%${ID}%' OR datoAfgørelse LIKE '%${ID}%' OR datoAfsluttet LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
 
       }
       

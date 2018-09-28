@@ -4,11 +4,8 @@ const escapeStringRegExp = require('escape-string-regexp')
 
 // App modules
 const { fn } = require('./functions')
-const { listeDef, currentSag, blurElements, colorThemes } = require('./variables')
+const { listeDef, currentSag, blurElements, colorThemes, flows } = require('./variables')
 let { liste } = require('./variables')
-
-// Variables
-const flows = ['Afventer afgørelsesdato','Tilladelsessag','Afslutningssag','Færdigbehandlet','Færdigbehandlet tilladelsessag, afventer afslutningsdato']
 
 
 const UIRender = {
