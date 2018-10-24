@@ -231,7 +231,7 @@ const UIRender = {
             }
 
             if (column === 'flow')
-              td.textContent = flows[item.flow]
+              td.textContent = item.flow
 
             if (column === 'brugerNavn')
               td.textContent = item.brugerNavn

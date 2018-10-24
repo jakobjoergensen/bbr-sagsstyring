@@ -888,6 +888,7 @@ const UICtrl = (() => {
       UIRender.renderListViewTable()
       UIRender.renderListViewHeadlines()
 
+      
       // hent data
       DBCtrl.get(listeDef[liste.selected].listeNavn, searchCriteria)
         .then(result => {

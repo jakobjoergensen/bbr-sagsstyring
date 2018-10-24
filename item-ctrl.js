@@ -10,6 +10,7 @@ const ItemCtrl = (() => {
       items.forEach(item => {
         const newItem = {
           sagID: item.sagID || null,
+          flowID: item.flowID || null,
           flow: item.flow || null,
           sagIndholdIDAktuel: item.sagIndholdIDAktuel || null,
           sagIndholdID: item.sagIndholdID || null,

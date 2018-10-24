@@ -34,27 +34,27 @@ const DBCtrl = (() => {
 
         switch (view) {
           case 'countIkkeTildeltTilladelse':
-            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltTilladelse'
+            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltTilladelseNY3'
           break
 
           case 'countIkkeTildeltAfsluttet':
-            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltAfsluttetNY2'
+            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltAfsluttetNY3'
           break
 
           case 'countTildeltTilladelse':
-            query = 'SELECT COUNT(*) count FROM view_sagTildeltTilladelse'
+            query = 'SELECT COUNT(*) count FROM view_sagTildeltTilladelseNY3'
           break
 
           case 'countTildeltAfsluttet':
-            query = 'SELECT COUNT(*) count FROM view_sagTildeltAfsluttetNY2'
+            query = 'SELECT COUNT(*) count FROM view_sagTildeltAfsluttetNY3'
           break
 
           case 'countTildelt':
-            query = 'SELECT COUNT(*) count FROM view_sagTildelt WHERE tildeltBrugerID = ' + bruger.ID
+            query = 'SELECT COUNT(*) count FROM view_sagTildeltNY3 WHERE tildeltBrugerID = ' + bruger.ID
           break
 
           case 'countOpfølgningsliste':
-            query = 'SELECT COUNT(*) OVER() count FROM view_sagOpfølgningNY GROUP BY sagID'
+            query = 'SELECT COUNT(*) OVER() count FROM view_sagOpfølgningNY3 GROUP BY sagID'
           break
 
         }
@@ -74,53 +74,53 @@ const DBCtrl = (() => {
       switch (view) {
         case 'ikkeTildeltTilladelse':
           query = `SELECT
-                    view_sagIkkeTildeltTilladelse.*
+                    view_sagIkkeTildeltTilladelseNY3.*
                     ,markering.color
                   FROM
-                    view_sagIkkeTildeltTilladelse
-                    LEFT JOIN markering ON view_sagIkkeTildeltTilladelse.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagIkkeTildeltTilladelse.datoAfgørelse`
+                    view_sagIkkeTildeltTilladelseNY3
+                    LEFT JOIN markering ON view_sagIkkeTildeltTilladelseNY3.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                  ORDER BY view_sagIkkeTildeltTilladelseNY3.datoAfgørelse`
         break
 
         case 'ikkeTildeltAfsluttet':
           query = `SELECT
-                    view_sagIkkeTildeltAfsluttetNY2.*
+                    view_sagIkkeTildeltAfsluttetNY3.*
                     ,markering.color
                   FROM
-                    view_sagIkkeTildeltAfsluttetNY2
-                    LEFT JOIN markering ON view_sagIkkeTildeltAfsluttetNY2.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagIkkeTildeltAfsluttetNY2.datoAfsluttet`
+                    view_sagIkkeTildeltAfsluttetNY3
+                    LEFT JOIN markering ON view_sagIkkeTildeltAfsluttetNY3.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                  ORDER BY view_sagIkkeTildeltAfsluttetNY3.datoAfsluttet`
         break
 
         case 'tildeltTilladelse':
           query = `SELECT
-                    view_sagTildeltTilladelse.*
+                    view_sagTildeltTilladelseNY3.*
                     ,markering.color
                   FROM
-                    view_sagTildeltTilladelse
-                    LEFT JOIN markering ON view_sagTildeltTilladelse.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagTildeltTilladelse.datoAfgørelse`
+                    view_sagTildeltTilladelseNY3
+                    LEFT JOIN markering ON view_sagTildeltTilladelseNY3.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                  ORDER BY view_sagTildeltTilladelseNY3.datoAfgørelse`
         break
 
         case 'tildeltAfsluttet':
           query = `SELECT
-                    view_sagTildeltAfsluttetNY2.*
+                    view_sagTildeltAfsluttetNY3.*
                     ,markering.color
                   FROM
-                    view_sagTildeltAfsluttetNY2
-                    LEFT JOIN markering ON view_sagTildeltAfsluttetNY2.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagTildeltAfsluttetNY2.datoAfsluttet`
+                    view_sagTildeltAfsluttetNY3
+                    LEFT JOIN markering ON view_sagTildeltAfsluttetNY3.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                  ORDER BY view_sagTildeltAfsluttetNY3.datoAfsluttet`
         break
 
         case 'tildelt':
           query = `SELECT
-                  view_sagTildelt.*
+                  view_sagTildeltNY3.*
                   ,markering.color
                   FROM
-                    view_sagTildelt
-                    LEFT JOIN markering ON view_sagTildelt.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                    view_sagTildeltNY3
+                    LEFT JOIN markering ON view_sagTildeltNY3.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
                   WHERE
-                    view_sagTildelt.tildeltBrugerID = ${bruger.ID}`
+                    view_sagTildeltNY3.tildeltBrugerID = ${bruger.ID}`
         break
 
         case 'sag':
@@ -145,28 +145,29 @@ const DBCtrl = (() => {
         break
 
         case 'opfølgningsliste':
-          query = `SELECT DISTINCT
-                  view_sagOpfølgningNY.sagID
-                  ,view_sagOpfølgningNY.referenceStructura
-                  ,view_sagOpfølgningNY.ejendomsnummer
-                  ,view_sagOpfølgningNY.sagsnummer
-                  ,view_sagOpfølgningNY.esdh
-                  ,view_sagOpfølgningNY.datoModtaget
-                  ,view_sagOpfølgningNY.datoAfgørelse
-                  ,view_sagOpfølgningNY.datoAfsluttet
-                  ,view_sagOpfølgningNY.sagsbehandler
-                  ,view_sagOpfølgningNY.sagsartKode
-                  ,view_sagOpfølgningNY.sagsart
-                  ,view_sagOpfølgningNY.politiskKategoriKode
-                  ,view_sagOpfølgningNY.politiskKategori
-                  ,view_sagOpfølgningNY.adresse
-                  ,view_sagOpfølgningNY.sagsindhold
-                  ,view_sagOpfølgningNY.afslutningstekstID
-                  ,view_sagOpfølgningNY.flow
-                  ,view_sagOpfølgningNY.tildeltBrugerNavn
+          query = `SELECT
+                  view_sagOpfølgningNY3.sagID
+                  ,view_sagOpfølgningNY3.referenceStructura
+                  ,view_sagOpfølgningNY3.ejendomsnummer
+                  ,view_sagOpfølgningNY3.sagsnummer
+                  ,view_sagOpfølgningNY3.esdh
+                  ,view_sagOpfølgningNY3.datoModtaget
+                  ,view_sagOpfølgningNY3.datoAfgørelse
+                  ,view_sagOpfølgningNY3.datoAfsluttet
+                  ,view_sagOpfølgningNY3.sagsbehandler
+                  ,view_sagOpfølgningNY3.sagsartKode
+                  ,view_sagOpfølgningNY3.sagsart
+                  ,view_sagOpfølgningNY3.politiskKategoriKode
+                  ,view_sagOpfølgningNY3.politiskKategori
+                  ,view_sagOpfølgningNY3.adresse
+                  ,view_sagOpfølgningNY3.sagsindhold
+                  ,view_sagOpfølgningNY3.afslutningstekstID
+                  ,view_sagOpfølgningNY3.flow
+                  ,view_sagOpfølgningNY3.flowID
+                  ,view_sagOpfølgningNY3.tildeltBrugerNavn
                   ,markering.color
-                  FROM view_sagOpfølgningNY
-                  LEFT JOIN markering ON view_sagOpfølgningNY.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
+                  FROM view_sagOpfølgningNY3
+                  LEFT JOIN markering ON view_sagOpfølgningNY3.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
         break
 
         case 'alle':
