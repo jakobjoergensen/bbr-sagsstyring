@@ -26,8 +26,8 @@ exports.check = () => {
     dialog.showMessageBox({
       type: 'info',
       title: 'Ny version tilgængelig',
-      message: 'Der er en ny version af BBR-sagsstyring tilgængelig. Vil du opdatere nu?',
-      buttons: ['Opdatér nu','Nej']
+      message: 'Der er en ny version af BBR-sagsstyring tilgængelig.',
+      buttons: ['Opdatér nu']
     }, (buttonIndex) => {
 
       // If not 'Update' button, return

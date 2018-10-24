@@ -99,7 +99,7 @@ const UIRender = {
 
       // celle til buttons
       if (column === 'SYSTEM_BUTTON_OVERFØR') {
-        th.style.width = '90px'
+        th.style.width = '60px'
       }
 
       if (column === 'antalBBRnotater') {
@@ -355,7 +355,7 @@ const UIRender = {
       const span = document.createElement('span')
       const small = document.createElement('small')
 
-      small.textContent = '0'
+      small.textContent = '...'
       small.setAttribute('id', element.id + '-counter')
       link.textContent = element.text
 

@@ -95,25 +95,20 @@ const NavCtrl = {
     const dropdowns = document.querySelectorAll('.dropdown-trigger')
     M.Dropdown.init(dropdowns,{hover:true, coverTrigger: false})
     
-    // Opdater counters i navigationsdropdowns
-    UIRender.updateCounters()
-
+    
     // Vis navbar
     document.getElementById('navbar').style.display = 'block'
     
     // Indlæs standardindstilling for antal sager der skal overføres
     UIRender.optionsOverførSager()
-
+    
     // Indlæs farvetemaet
     UIRender.updateColorTheme()
-      
+    
     
     // åbn startside
     UICtrl.listeInit(bruger.settings.opstartsside)
-        
-    // fjern progressbar
-    // UIRender.deleteProgressBar()       
-      
+          
     }
   }
 
@@ -131,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     opacity: 0.5,
     inDuration: 100,
     outDuration: 100,
-    preventScrolling: true,
+    preventScrolling: false,
     dismissible: true
   })
 

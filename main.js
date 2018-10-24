@@ -7,7 +7,7 @@ const sql = require('mssql/msnodesqlv8')
 
 
 const az = process.env['USERPROFILE'].split(path.sep)[2]
-const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = '${az}'`
+const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = '${az}'`
 // const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'aztp006'`
 
 let mainWindow
@@ -104,7 +104,7 @@ ipcMain.on('get:brugere', async e => {
 // ipc listener - hent oplysninger om antal BBR notater
 ipcMain.on('get:antalBBRnotater', async e => {
   try {
-    const result = await pool.request().query('SELECT sagID, COUNT(sagID) \'antalBBRnotater\' FROM view_bbrNotatNy GROUP BY sagID')
+    const result = await pool.request().query('SELECT sagID, COUNT(sagID) \'antalBBRnotater\' FROM bbrNotat GROUP BY sagID')
     e.returnValue = result['recordsets'][0]
   } catch (err) {
     console.log(err)
