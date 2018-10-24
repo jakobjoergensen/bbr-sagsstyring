@@ -146,25 +146,7 @@ const DBCtrl = (() => {
 
         case 'opfølgningsliste':
           query = `SELECT
-                  view_sagOpfølgningNY3.sagID
-                  ,view_sagOpfølgningNY3.referenceStructura
-                  ,view_sagOpfølgningNY3.ejendomsnummer
-                  ,view_sagOpfølgningNY3.sagsnummer
-                  ,view_sagOpfølgningNY3.esdh
-                  ,view_sagOpfølgningNY3.datoModtaget
-                  ,view_sagOpfølgningNY3.datoAfgørelse
-                  ,view_sagOpfølgningNY3.datoAfsluttet
-                  ,view_sagOpfølgningNY3.sagsbehandler
-                  ,view_sagOpfølgningNY3.sagsartKode
-                  ,view_sagOpfølgningNY3.sagsart
-                  ,view_sagOpfølgningNY3.politiskKategoriKode
-                  ,view_sagOpfølgningNY3.politiskKategori
-                  ,view_sagOpfølgningNY3.adresse
-                  ,view_sagOpfølgningNY3.sagsindhold
-                  ,view_sagOpfølgningNY3.afslutningstekstID
-                  ,view_sagOpfølgningNY3.flow
-                  ,view_sagOpfølgningNY3.flowID
-                  ,view_sagOpfølgningNY3.tildeltBrugerNavn
+                  view_sagOpfølgningNY3.*
                   ,markering.color
                   FROM view_sagOpfølgningNY3
                   LEFT JOIN markering ON view_sagOpfølgningNY3.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
