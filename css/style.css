@@ -5,12 +5,13 @@ body {
 }
 
 /* Table */
+
 thead th:hover {
   cursor: pointer;
 }
 
 tr td {
-  border-right: 1px solid  rgba(0,0,0,.03) !important;
+  border-right: 1px solid rgba(0, 0, 0, .03) !important;
   font-size: 14px;
 }
 
@@ -27,10 +28,8 @@ tr:hover {
   cursor: pointer;
 }
 
-
-#færdigbehandlet-afslutningssag-items div,
-#færdigbehandlet-tilladelsessag-items div {
-  font-size:12px;
+#færdigbehandlet-afslutningssag-items div, #færdigbehandlet-tilladelsessag-items div {
+  font-size: 12px;
 }
 
 a.btn {
@@ -50,8 +49,8 @@ a.btn {
   color: #0d47a1;
 }
 
-
 /* Progress preloader spinner */
+
 #progress-fixed {
   position: relative;
   z-index: 801;
@@ -66,7 +65,7 @@ a.btn {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255,255,255,0.75);
+  background-color: rgba(255, 255, 255, 0.75);
   z-index: 800;
 }
 
@@ -75,9 +74,6 @@ a.btn {
   top: 47%;
   left: 47%;
 }
-
-
-
 
 .dropdown-content li:hover {
   background-color: #039be5;
@@ -107,8 +103,8 @@ a.btn {
 }
 
 #modal-single-view {
-  width: 1500px;
-  min-height: 900px;
+  width: 90% !important;
+  min-height: 550px;
 }
 
 #modal-single-view table {
@@ -138,209 +134,228 @@ textarea {
 }
 
 /* Radio farver ***************************************************************************** */
+
 /* Radio black */
-[type="radio"].radio-black.with-gap:checked + span:after,
-[type="radio"].radio-black.with-gap:checked + span:before {
-  border: 2px solid #000000;  
+
+[type="radio"].radio-black.with-gap:checked+span:after, [type="radio"].radio-black.with-gap:checked+span:before {
+  border: 2px solid #000000;
 }
 
-[type="radio"].radio-black.with-gap:checked + span:after {
+[type="radio"].radio-black.with-gap:checked+span:after {
   background-color: #000000;
 }
 
 /* Radio blue */
-[type="radio"].radio-blue:checked + span:after {
+
+[type="radio"].radio-blue:checked+span:after {
   background-color: #2196f3;
   border: 2px solid #2196f3;
 }
 
-[type="radio"].radio-blue + span:before,
-[type="radio"].radio-blue + span:after {
+[type="radio"].radio-blue+span:before, [type="radio"].radio-blue+span:after {
   background-color: transparent;
   border: 2px solid #2196f3
 }
 
 /* Radio green */
-[type="radio"].radio-light-green:checked + span:after {
+
+[type="radio"].radio-light-green:checked+span:after {
   background-color: #8bc34a;
   border: 2px solid #8bc34a;
 }
 
-[type="radio"].radio-light-green + span:before,
-[type="radio"].radio-light-green + span:after {
+[type="radio"].radio-light-green+span:before, [type="radio"].radio-light-green+span:after {
   background-color: transparent;
   border: 2px solid #8bc34a
 }
 
 /* Radio yellow */
-[type="radio"].radio-amber:checked + span:after {
+
+[type="radio"].radio-amber:checked+span:after {
   background-color: #ffc107;
   border: 2px solid #ffc107;
 }
 
-[type="radio"].radio-amber + span:before,
-[type="radio"].radio-amber + span:after {
+[type="radio"].radio-amber+span:before, [type="radio"].radio-amber+span:after {
   background-color: transparent;
   border: 2px solid #ffc107
 }
 
 /* Radio red */
-[type="radio"].radio-red:checked + span:after {
+
+[type="radio"].radio-red:checked+span:after {
   background-color: #f44336;
   border: 2px solid #f44336;
 }
 
-[type="radio"].radio-red + span:before,
-[type="radio"].radio-red + span:after {
+[type="radio"].radio-red+span:before, [type="radio"].radio-red+span:after {
   background-color: transparent;
   border: 2px solid #f44336
-
 }
 
 /* Radio teal */
-[type="radio"].radio-teal:checked + span:after {
+
+[type="radio"].radio-teal:checked+span:after {
   background-color: #009688;
   border: 2px solid #009688;
 }
 
-[type="radio"].radio-teal + span:before,
-[type="radio"].radio-teal + span:after {
+[type="radio"].radio-teal+span:before, [type="radio"].radio-teal+span:after {
   background-color: transparent;
   border: 2px solid #009688
 }
 
 /* Radio orange */
-[type="radio"].radio-orange:checked + span:after {
+
+[type="radio"].radio-orange:checked+span:after {
   background-color: #ff9800;
   border: 2px solid #ff9800;
 }
 
-[type="radio"].radio-orange + span:before,
-[type="radio"].radio-orange + span:after {
+[type="radio"].radio-orange+span:before, [type="radio"].radio-orange+span:after {
   background-color: transparent;
-  border: 2px solid #ff9800 
+  border: 2px solid #ff9800
 }
 
 /* Radio pink */
-[type="radio"].radio-pink:checked + span:after {
+
+[type="radio"].radio-pink:checked+span:after {
   background-color: #e91e63;
   border: 2px solid #e91e63;
 }
 
-[type="radio"].radio-pink + span:before,
-[type="radio"].radio-pink + span:after {
+[type="radio"].radio-pink+span:before, [type="radio"].radio-pink+span:after {
   background-color: transparent;
   border: 2px solid #e91e63;
 }
 
 /* Radio gråsort */
-[type="radio"].radio-grey:checked + span:after {
+
+[type="radio"].radio-grey:checked+span:after {
   background-color: #424242;
   border: 2px solid #424242;
 }
 
-[type="radio"].radio-grey + span:before,
-[type="radio"].radio-grey + span:after {
+[type="radio"].radio-grey+span:before, [type="radio"].radio-grey+span:after {
   background-color: transparent;
   border: 2px solid #424242;
 }
 
 /* Switch farver **************************************************************** */
+
 /* Switch amber */
-.toggle-amber label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-amber label input[type="checkbox"]:checked+.lever:after {
   background-color: #ffc107;
 }
-.toggle-amber label input[type=checkbox]:checked + .lever {
+
+.toggle-amber label input[type=checkbox]:checked+.lever {
   background-color: #ffecb3;
 }
 
 /* Switch blå */
-.toggle-blue label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-blue label input[type="checkbox"]:checked+.lever:after {
   background-color: #2196f3;
 }
-.toggle-blue label input[type=checkbox]:checked + .lever {
+
+.toggle-blue label input[type=checkbox]:checked+.lever {
   background-color: #bbdefb;
 }
 
 /* Switch lgiht-green */
-.toggle-light-green label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-light-green label input[type="checkbox"]:checked+.lever:after {
   background-color: #8bc34a;
 }
-.toggle-light-green label input[type=checkbox]:checked + .lever {
+
+.toggle-light-green label input[type=checkbox]:checked+.lever {
   background-color: #dcedc8;
 }
 
 /* Switch red */
-.toggle-red label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-red label input[type="checkbox"]:checked+.lever:after {
   background-color: #f44336;
 }
-.toggle-red label input[type=checkbox]:checked + .lever {
+
+.toggle-red label input[type=checkbox]:checked+.lever {
   background-color: #ffcdd2;
 }
 
 /* Switch teal */
-.toggle-teal label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-teal label input[type="checkbox"]:checked+.lever:after {
   background-color: #009688;
 }
-.toggle-teal label input[type=checkbox]:checked + .lever {
+
+.toggle-teal label input[type=checkbox]:checked+.lever {
   background-color: #b2dfdb;
 }
 
 /* Switch orange */
-.toggle-orange label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-orange label input[type="checkbox"]:checked+.lever:after {
   background-color: #ff9800;
 }
-.toggle-orange label input[type=checkbox]:checked + .lever {
+
+.toggle-orange label input[type=checkbox]:checked+.lever {
   background-color: #ffe0b2;
 }
 
 /* Switch pink */
-.toggle-pink label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-pink label input[type="checkbox"]:checked+.lever:after {
   background-color: #e91e63;
 }
-.toggle-pink label input[type=checkbox]:checked + .lever {
+
+.toggle-pink label input[type=checkbox]:checked+.lever {
   background-color: #f8bbd0;
 }
 
 /* Switch gråsort */
-.toggle-grey label input[type="checkbox"]:checked + .lever:after {
+
+.toggle-grey label input[type="checkbox"]:checked+.lever:after {
   background-color: #424242;
 }
-.toggle-grey label input[type=checkbox]:checked + .lever {
+
+.toggle-grey label input[type=checkbox]:checked+.lever {
   background-color: #9e9e9e;
 }
 
-
 /* Dropdown hover farver */
+
 ul.dropdown-content.blue li:hover {
   background-color: #0d47a1;
 }
+
 ul.dropdown-content.amber li:hover {
   background-color: #ffa000;
 }
+
 ul.dropdown-content.light-green li:hover {
   background-color: #689f38;
 }
+
 ul.dropdown-content.red li:hover {
   background-color: #c62828;
 }
+
 ul.dropdown-content.teal li:hover {
   background-color: #00796b;
 }
+
 ul.dropdown-content.orange li:hover {
   background-color: #f57c00;
 }
+
 ul.dropdown-content.pink li:hover {
   background-color: #c2185b;
 }
+
 ul.dropdown-content.grey li:hover {
   background-color: #212121;
 }
-
-
-
-
-
 
 .margin-left-s {
   margin-left: 5px;
@@ -378,7 +393,6 @@ ul.dropdown-content.grey li:hover {
 #options {
   position: fixed;
   width: 100%;
-  
 }
 
 #options-wrapper {
@@ -404,9 +418,7 @@ h4 {
   font-weight: 800;
 }
 
-#expand-options:hover,
-#button-settings:hover,
-#button-dashboard:hover {
+#expand-options:hover, #button-settings:hover, #button-dashboard:hover {
   cursor: pointer;
 }
 
@@ -428,5 +440,5 @@ h4 {
 
 .norow-space {
   margin: 0;
-  padding:0
+  padding: 0
 }

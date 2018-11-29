@@ -9,6 +9,7 @@ const sql = require('mssql/msnodesqlv8')
 const az = process.env['USERPROFILE'].split(path.sep)[2]
 const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = '${az}'`
 // const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'aztp006'`
+//const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'aztp009'`
 
 let mainWindow
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
