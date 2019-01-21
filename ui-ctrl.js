@@ -491,18 +491,15 @@ const UICtrl = (() => {
   // Alle sager
   document.getElementById('navAlleSager').addEventListener('click', e => {
     e.preventDefault()
-
-    // liste.selected = 6
-
     UICtrl.listeInit(6)
-
-    // Fjern gammel table
-    // UIRender.deleteChildren('data-content')
-    
-    // UIRender.renderListViewTable()
-    // UIRender.renderListViewHeadlines()
   })
 
+
+  // Påbegyndelsesliste
+  document.getElementById('navPåbegyndelsessager').addEventListener('click', e => {
+    e.preventDefault()
+    UICtrl.listeInit(7)
+  })
 
   // ************************ SØGEBOKS ****************************************************************
   let searchDelay

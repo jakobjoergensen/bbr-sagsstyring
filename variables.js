@@ -70,6 +70,16 @@ const listeDef = [
     toggle_opfølgningssager: true,
     searchString: '',
     columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler']
+  },
+  {
+    listeID: 7,
+    headline: 'Påbegyndelsessager',
+    listeNavn: 'påbegyndelsessager',
+    sortColumn: 'sagsnummer',
+    sortDirection: 'asc',
+    toggle_opfølgningssager: false,
+    searchString: '',
+    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoAktivitetPåbegyndelseSlut', 'adresse', 'sagsindhold']
   }
 ]
 

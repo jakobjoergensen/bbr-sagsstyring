@@ -91,7 +91,10 @@ const NavCtrl = {
     
     // Aktiver dropdowns
     const dropdowns = document.querySelectorAll('.dropdown-trigger')
-    M.Dropdown.init(dropdowns,{hover:true, coverTrigger: false})
+    M.Dropdown.init(dropdowns,{
+      hover: true,
+      coverTrigger: false
+    })
     
     
     // Vis navbar
@@ -131,9 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
     preventScrolling: false,
     dismissible: true
   })
-
-  
-
 
   // Init tooltips
   const elems_tooltips = document.querySelectorAll('.tooltipped')

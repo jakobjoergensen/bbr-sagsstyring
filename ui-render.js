@@ -152,6 +152,10 @@ const UIRender = {
       if (column === 'politiskKategori')
         th.textContent = 'Politisk kategori'
 
+      if (column === 'datoAktivitetPåbegyndelseSlut')
+        th.textContent = 'Slutdato for aktivitet'
+
+
       // Sæt en data-attribute på hver th-element, der afspejler navnet på key'en i items-objektet
       // Dette benyttes til at styre hvilke kolonne listen skal sorteres efter, når der klikkes på en kolonneoverskrift
       // Af dovenskab bruger vi bare kolonnenavnet taget direkte fra Item-objektet/SQL-datasen til value på data-attributen
@@ -278,6 +282,16 @@ const UIRender = {
             }
 
 
+            if (column === 'datoAktivitetPåbegyndelseSlut') {
+              tdValue = null
+
+              if (item.datoAktivitetPåbegyndelseSlut !== null)
+                tdValue = fn.datoConvert(item.datoAktivitetPåbegyndelseSlut).toString()
+
+              td.className = 'center-align'
+            }
+
+
             if (column === 'adresse') {
               tdValue = truncate(item.adresse, 35)
             }
@@ -295,8 +309,9 @@ const UIRender = {
               td.textContent = item.politiskKategori
 
 
+
             // Aktiver highlight ved søgeresultater for udvalgte kolonner
-            const searchColumns = ['sagsnummer', 'esdh', 'adresse', 'sagsindhold', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet']
+            const searchColumns = ['sagsnummer', 'esdh', 'adresse', 'sagsindhold', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet','datoAktivitetPåbegyndelseSlut']
             if (searchColumns.find(x => x === column) !== undefined && tdValue !== null) {
               td.innerHTML = tdValue.replace(regex, str => `<span class="yellow black-text"><b>${str}</b></span>`)
             }
@@ -347,7 +362,8 @@ const UIRender = {
       { id: 'navTildeltTilladelse', text: 'Tilladelsessager' },
       { id: 'navTildeltAfsluttet', text: 'Afslutningssager' },
       { id: 'navOpfølgningsliste', text: 'Opfølgningsliste' },
-      { id: 'navMineSager', text: 'Mine sager' }
+      { id: 'navMineSager', text: 'Mine sager' },
+      { id: 'navPåbegyndelsessager', text: 'Påbegyndelsessager' }
     ]
 
     navElements.forEach(element => {

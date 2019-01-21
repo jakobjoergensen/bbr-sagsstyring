@@ -142,7 +142,15 @@ const DBCtrl = (() => {
 
         case 'alle':
           query = `SELECT * FROM view_sagAktuelAlle WHERE sagsnummer LIKE '%${ID}%' OR esdh LIKE '%${ID}%' OR datoModtaget LIKE '%${ID}%' OR datoAfgørelse LIKE '%${ID}%' OR datoAfsluttet LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
+        break
 
+        case 'påbegyndelsessager':
+          query = `SELECT
+                  view_påbegyndelsessager.*
+                  ,markering.color
+                  FROM view_påbegyndelsessager
+                  LEFT JOIN markering ON view_påbegyndelsessager.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
+        break
       }
       
       // kør forespørgsel
