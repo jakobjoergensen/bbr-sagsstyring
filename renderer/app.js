@@ -77,8 +77,6 @@ function User(data) {
 
 /* NAV CONTROLLOR ***********************************************************/
 const NavCtrl = {
-
-  // Opdater nav counters hver 10. minut
   
   init: () => {
 
@@ -108,7 +106,11 @@ const NavCtrl = {
     
     // åbn startside
     UICtrl.listeInit(bruger.settings.opstartsside)
-          
+    
+    // sæt test border
+    if (SQLConfig.database === 'BBRsagsstyring_Test') {
+      document.getElementsByTagName('body')[0].classList.add('test')
+    }
     }
   }
 
