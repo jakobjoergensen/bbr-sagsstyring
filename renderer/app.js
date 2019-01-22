@@ -15,8 +15,6 @@ window.eval = global.eval = function () {
 
 // Objekt der kommmer til at indeholde alle brugere
 // - vi benytter nedenstående brugerobjekt som objekter i objektet
-
-let antalBBRnotater = []
 let opfølgningssagerToggle
 let bruger = {}
 let brugere = []
@@ -55,20 +53,6 @@ function User(data) {
   })
 })()
 
-// Indlæs oplysninger om antal BBR notater
-;(() => {
-  data = ipcRenderer.sendSync('get:antalBBRnotater')
-
-  data.forEach(d => {
-    const row = {
-      sagID: d.sagID,
-      antalBBRnotater: d.antalBBRnotater
-    }
-
-    antalBBRnotater.push(row)
-  })
-  
-})()
 
 
 

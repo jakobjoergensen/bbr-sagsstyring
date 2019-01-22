@@ -4,7 +4,7 @@ const escapeStringRegExp = require('escape-string-regexp')
 
 // App modules
 const { fn } = require('./functions')
-const { listeDef, currentSag, blurElements, colorThemes, flows } = require('./variables')
+const { listeDef, currentSag, blurElements, colorThemes, flows, centerColumns } = require('./variables')
 let { liste } = require('./variables')
 
 
@@ -102,10 +102,8 @@ const UIRender = {
         th.style.width = '60px'
       }
 
-      if (column === 'antalBBRnotater') {
+      if (column === 'antalBBRnotater')
         th.textContent = 'BBR notater'
-        th.classList.add('center')
-      }
 
       if (column === 'flow')
         th.textContent = 'Status'
@@ -113,20 +111,14 @@ const UIRender = {
       if (column === 'brugerNavn')
         th.textContent = 'Ligger hos'
 
-      if (column === 'sagsnummer') {
+      if (column === 'sagsnummer')
         th.textContent = 'Sagsnummer'
-        th.className = 'center-align'
-      }
       
-      if (column === 'ejendomsnummer') {
+      if (column === 'ejendomsnummer')
         th.textContent = 'Ejd.nr.'
-        th.className = 'center-align'
-      }
 
-      if (column === 'esdh') {
+      if (column === 'esdh')
         th.textContent = 'ESDH'
-        th.className = 'center-align'
-      }
 
       if (column === 'datoModtaget')
         th.textContent = 'Modtagelsesdato'
@@ -152,10 +144,14 @@ const UIRender = {
       if (column === 'politiskKategori')
         th.textContent = 'Politisk kategori'
 
-      if (column === 'datoAktivitetPåbegyndelseSlut')
+      if (column === 'datoAktivitetPåbegyndelseSlut') 
         th.textContent = 'Slutdato for aktivitet'
 
 
+      // center align visse kolonners overskrifter
+      if (centerColumns.find(x => x === column) !== undefined)
+        th.className = 'center-align'  
+      
       // Sæt en data-attribute på hver th-element, der afspejler navnet på key'en i items-objektet
       // Dette benyttes til at styre hvilke kolonne listen skal sorteres efter, når der klikkes på en kolonneoverskrift
       // Af dovenskab bruger vi bare kolonnenavnet taget direkte fra Item-objektet/SQL-datasen til value på data-attributen
@@ -229,10 +225,8 @@ const UIRender = {
             }
 
             
-            if (column === 'antalBBRnotater') {
+            if (column === 'antalBBRnotater')
               td.textContent = item.antalBBRnotater
-              td.classList.add('center')
-            }
 
             if (column === 'flow')
               td.textContent = item.flow
@@ -240,35 +234,27 @@ const UIRender = {
             if (column === 'brugerNavn')
               td.textContent = item.brugerNavn
 
-            if (column === 'sagsnummer') {
+            if (column === 'sagsnummer')
               tdValue = item.sagsnummer
-              td.className = 'center-align'
-            }
             
-            if (column === 'ejendomsnummer') {
+            if (column === 'ejendomsnummer')
               td.textContent = item.ejendomsnummer
-              td.className = 'center-align'
-            }
-            
-
+           
             if (column === 'esdh') {
               tdValue = item.esdh
-              td.className = 'center-align'
+              
+              if (item.esdh === 'Den tilknyttede eDoc-sag kunne ikke hentes fra eDoc.')
+                tdValue = ''
             }
 
-            if (column === 'datoModtaget') {
+            if (column === 'datoModtaget')
               tdValue = fn.datoConvert(item.datoModtaget).toString() || null
-              td.className = 'center-align'
-            }
-
 
             if (column === 'datoAfgørelse') {
               tdValue = null
 
               if (item.datoAfgørelse !== null)
                 tdValue = fn.datoConvert(item.datoAfgørelse).toString()
-
-              td.className = 'center-align'
             }
 
 
@@ -277,8 +263,6 @@ const UIRender = {
 
               if (item.datoAfsluttet !== null)
                 tdValue = fn.datoConvert(item.datoAfsluttet).toString()
-              
-              td.className = 'center-align'
             }
 
 
@@ -287,15 +271,12 @@ const UIRender = {
 
               if (item.datoAktivitetPåbegyndelseSlut !== null)
                 tdValue = fn.datoConvert(item.datoAktivitetPåbegyndelseSlut).toString()
-
-              td.className = 'center-align'
             }
 
 
-            if (column === 'adresse') {
+            if (column === 'adresse')
               tdValue = truncate(item.adresse, 35)
-            }
-
+            
             if (column === 'sagsindhold')
               tdValue = truncate(item.sagsindhold, 50)
 
@@ -309,6 +290,9 @@ const UIRender = {
               td.textContent = item.politiskKategori
 
 
+            // center align visse kolonners overskrifter
+            if (centerColumns.find(x => x === column) !== undefined)
+              td.className = 'center-align' 
 
             // Aktiver highlight ved søgeresultater for udvalgte kolonner
             const searchColumns = ['sagsnummer', 'esdh', 'adresse', 'sagsindhold', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet','datoAktivitetPåbegyndelseSlut']
@@ -351,6 +335,9 @@ const UIRender = {
     DBCtrl.getCounts('countTildeltAfsluttet').then(result => { document.getElementById('navTildeltAfsluttet-counter').textContent = result[0].count })
     DBCtrl.getCounts('countOpfølgningsliste').then(result => { document.getElementById('navOpfølgningsliste-counter').textContent = result[0].count })
     DBCtrl.getCounts('countTildelt').then(result => { document.getElementById('navMineSager-counter').textContent = result[0].count })
+
+    // no count
+    document.getElementById('navPåbegyndelsessager-counter').textContent = ''
     
   }, 
 

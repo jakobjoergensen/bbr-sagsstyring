@@ -41,7 +41,7 @@ app.on('ready', async () => {
       mainWindow = new BrowserWindow({
         show: false,
         backgroundColor: '#ffffff',
-        title: 'BBR-sagsstyring',
+        title: 'BBR-sagsstyring ' + app.getVersion(),
         width: 1400,
         height: 1000,
         webPreferences: {
@@ -97,17 +97,6 @@ ipcMain.on('get:bruger', async e => {
 ipcMain.on('get:brugere', async e => {
   try {
     const result = await pool.request().query('SELECT * FROM view_brugerAktuel WHERE setting_status <> 0 ORDER BY navn ASC')
-    e.returnValue = result['recordsets'][0]
-  } catch (err) {
-    console.log(err)
-  }
-})
-
-
-// ipc listener - hent oplysninger om antal BBR notater
-ipcMain.on('get:antalBBRnotater', async e => {
-  try {
-    const result = await pool.request().query('SELECT sagID, COUNT(sagID) \'antalBBRnotater\' FROM bbrNotat GROUP BY sagID')
     e.returnValue = result['recordsets'][0]
   } catch (err) {
     console.log(err)

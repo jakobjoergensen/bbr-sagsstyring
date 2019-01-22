@@ -77,7 +77,7 @@ const listeDef = [
     listeNavn: 'påbegyndelsessager',
     sortColumn: 'sagsnummer',
     sortDirection: 'asc',
-    toggle_opfølgningssager: false,
+    toggle_opfølgningssager: true,
     searchString: '',
     columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoAktivitetPåbegyndelseSlut', 'adresse', 'sagsindhold']
   }
@@ -120,6 +120,16 @@ const flows = [
     'Afslutningssag, delvis færdigbehandlet' // 5
   ]
 
+const centerColumns = [
+  'antalBBRnotater',
+  'sagsnummer',
+  'ejendomsnummer',
+  'esdh',
+  'datoModtaget',
+  'datoAfgørelse',
+  'datoAfsluttet',
+  'datoAktivitetPåbegyndelseSlut'
+]
 
 module.exports = {
   listeDef,
@@ -128,5 +138,6 @@ module.exports = {
   blurElements,
   colorThemes,
   colorThemeSelected,
-  flows
+  flows,
+  centerColumns
 }

@@ -899,18 +899,6 @@ const UICtrl = (() => {
           fn.setSortColumn(listeDef[liste.selected].sortColumn, true)
           liste.items.sort(fn.compare)
     
-          // Opdater items-objekternes 'antalBBRnotater'-property, hvis der er noget
-          for (let i = 0; i < liste.items.length; i++) {
-    
-            // Har sagen nogle BBR notater?
-            const match = antalBBRnotater.find(x => x.sagID === liste.items[i].sagID)
-            
-            // Hvis der er et match, opdater item property 'antalBBRnotater'
-            if (match !== undefined) {
-              liste.items[i].antalBBRnotater = match.antalBBRnotater
-            }
-          
-          }
           // indlæs liste
           UIRender.renderListView()
     
