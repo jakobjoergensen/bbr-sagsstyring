@@ -57,6 +57,10 @@ const DBCtrl = (() => {
             query = 'SELECT COUNT(*) OVER() count FROM view_sagOpfølgning GROUP BY sagID'
           break
 
+          case 'countPåbegyndelsesliste':
+            query = 'SELECT COUNT(*) OVER() count FROM view_påbegyndelsessager'
+          break
+
         }
         
         // kør forespørgsel

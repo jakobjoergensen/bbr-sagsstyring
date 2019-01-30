@@ -335,9 +335,7 @@ const UIRender = {
     DBCtrl.getCounts('countTildeltAfsluttet').then(result => { document.getElementById('navTildeltAfsluttet-counter').textContent = result[0].count })
     DBCtrl.getCounts('countOpfølgningsliste').then(result => { document.getElementById('navOpfølgningsliste-counter').textContent = result[0].count })
     DBCtrl.getCounts('countTildelt').then(result => { document.getElementById('navMineSager-counter').textContent = result[0].count })
-
-    // no count
-    document.getElementById('navPåbegyndelsessager-counter').textContent = ''
+    DBCtrl.getCounts('countPåbegyndelsesliste').then(result => { document.getElementById('navPåbegyndelsessager-counter').textContent = result[0].count })
     
   }, 
 
