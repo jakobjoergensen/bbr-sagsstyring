@@ -1,4 +1,4 @@
-const test = false
+const test = true
 
 const SQLConfig = {
     server: 'srvsql29',

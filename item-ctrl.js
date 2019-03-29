@@ -22,6 +22,7 @@ const ItemCtrl = (() => {
           ændringBrugerNavn: item.ændringBrugerNavn || null,
           timestampFærdigbehandletTilladelse: item.timestampFærdigbehandletTilladelse || null,
           timestampFærdigbehandletAfslutning: item.timestampFærdigbehandletAfsluttet || null,
+          timestampFærdigbehandletPåbegyndelsesdato: item.timestampFærdigbehandletPåbegyndelsesdato || null,
           ejendomsnummer: item.ejendomsnummer || null,
           sagsnummer: item.sagsnummer || null,
           esdh: item.esdh || null,
@@ -47,7 +48,8 @@ const ItemCtrl = (() => {
           sagBrugerÆndringTimestamp: item.sagBrugerÆndringTimestamp || null,
           sagBrugerÆndringBrugerNavn: item.sagBrugerÆndringBrugerNavn || null,
           færdigbehandletTilladelse: [],
-          færdigbehandletAfsluttet: []
+          færdigbehandletAfsluttet: [],
+          færdigbehandletPåbegyndelsesdato: []
         }
         
         populatedItemList.push(newItem)

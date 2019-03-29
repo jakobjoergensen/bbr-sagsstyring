@@ -246,6 +246,19 @@ const DBCtrl = (() => {
       return getData(query)
     },
 
+    getFærdigbehandlingerPåbegyndelsesdato: sagID => {
+      query = `SELECT
+              brugerID,
+              brugerNavn,
+              timestampFærdigbehandletPåbegyndelsesdato
+              FROM view_sagerFærdigbehandletPåbegyndelsesdato
+              WHERE sagID = '${sagID}'
+              ORDER BY timestampFærdigbehandletPåbegyndelsesdato DESC
+              `
+
+      return getData(query)
+    },
+
 
     execStoredProcedure: (procedure, params, output = null) => {
       

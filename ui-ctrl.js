@@ -191,9 +191,23 @@ const UICtrl = (() => {
               return sag
             })
         })
+
+         // Hent array med færdigbehandlede afslutningssager for den pågældende sag
+        // (der kan i princippet være flere, da en sag i BBR fordeles til de individuelle entiteter SOM SELVSTÆNDIGE SAGER MED SAMME SAGSNUMMER!)      
+        .then(sag => {
+          return DBCtrl.getFærdigbehandlingerPåbegyndelsesdato(id)
+
+            .then(data => {
+              if (data)
+                sag[0].færdigbehandletPåbegyndelsesdato = data
+
+              return sag
+            })
+        })
         
         // Indlæs data i DOM elementer
         .then(sag => {
+          
           UIRender.renderSag(sag[0])
           modal.open()
           UIRender.deleteProgressBar()
@@ -390,6 +404,37 @@ const UICtrl = (() => {
       .then(() => {
         // Visuel feedback når færdigbehandlingen er gemt i DB
         const card = document.getElementById('card-færdigbehandling-afslutning')
+        fn.saveHighlight(card)
+
+        setTimeout(() => {
+          // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
+          UICtrl.listeInit(liste.selected)
+          UIRender.updateCounters()
+
+          // Luk modal vindue
+          modal.close()
+        }, 500)
+
+          
+      })
+  })
+
+
+  // -------------------------------------------------------------------------------------------------------------
+  // Gemme færdigbehandling af påbegyndelsesdato  --------------------------------------------------------------------
+  document.getElementById('færdigbehandling-påbegyndelsesdato').addEventListener('click', () => {
+
+    // sæt parameter til brug i stored procedure til 1
+    const params = [
+      ['sagID', Number(currentSag.sagID)],
+      ['brugerID', Number(bruger.ID)],
+      ['checked', 1]
+    ]
+
+    DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingPåbegyndelsesdato', params)
+      .then(() => {
+        // Visuel feedback når færdigbehandlingen er gemt i DB
+        const card = document.getElementById('card-færdigbehandling-påbegyndelsesdato')
         fn.saveHighlight(card)
 
         setTimeout(() => {

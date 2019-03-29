@@ -289,7 +289,7 @@ const UIRender = {
             if (column === 'politiskKategori')
               td.textContent = item.politiskKategori
 
-
+            
             // center align visse kolonners overskrifter
             if (centerColumns.find(x => x === column) !== undefined)
               td.className = 'center-align' 
@@ -329,13 +329,13 @@ const UIRender = {
   updateCounters: () => {
 
     // Opdaterer angivelse af antal sager i de forskellige lister i navigationsdropdowns
-    DBCtrl.getCounts('countIkkeTildeltTilladelse').then(result => { document.getElementById('navIkkeTildeltTilladelse-counter').textContent = result[0].count })
-    DBCtrl.getCounts('countIkkeTildeltAfsluttet').then(result => { document.getElementById('navIkkeTildeltAfsluttet-counter').textContent = result[0].count })
-    DBCtrl.getCounts('countTildeltTilladelse').then(result => { document.getElementById('navTildeltTilladelse-counter').textContent = result[0].count })
-    DBCtrl.getCounts('countTildeltAfsluttet').then(result => { document.getElementById('navTildeltAfsluttet-counter').textContent = result[0].count })
-    DBCtrl.getCounts('countOpfølgningsliste').then(result => { document.getElementById('navOpfølgningsliste-counter').textContent = result[0].count })
-    DBCtrl.getCounts('countTildelt').then(result => { document.getElementById('navMineSager-counter').textContent = result[0].count })
-    DBCtrl.getCounts('countPåbegyndelsesliste').then(result => { document.getElementById('navPåbegyndelsessager-counter').textContent = result[0].count })
+    // DBCtrl.getCounts('countIkkeTildeltTilladelse').then(result => { document.getElementById('navIkkeTildeltTilladelse-counter').textContent = result[0].count })
+    // DBCtrl.getCounts('countIkkeTildeltAfsluttet').then(result => { document.getElementById('navIkkeTildeltAfsluttet-counter').textContent = result[0].count })
+    // DBCtrl.getCounts('countTildeltTilladelse').then(result => { document.getElementById('navTildeltTilladelse-counter').textContent = result[0].count })
+    // DBCtrl.getCounts('countTildeltAfsluttet').then(result => { document.getElementById('navTildeltAfsluttet-counter').textContent = result[0].count })
+    // DBCtrl.getCounts('countOpfølgningsliste').then(result => { document.getElementById('navOpfølgningsliste-counter').textContent = result[0].count })
+    // DBCtrl.getCounts('countTildelt').then(result => { document.getElementById('navMineSager-counter').textContent = result[0].count })
+    // DBCtrl.getCounts('countPåbegyndelsesliste').then(result => { document.getElementById('navPåbegyndelsessager-counter').textContent = result[0].count })
     
   }, 
 
@@ -413,6 +413,8 @@ const UIRender = {
     UIRender.renderHvemHarSagen()
     UIRender.færdigbehandletTilladelse(sag)
     UIRender.færdigbehandletAfsluttet(sag)
+    UIRender.færdigbehandletPåbegyndelsesdato(sag)
+    
 
     // BBR notater **************************************************************************************************
     const tbody = document.getElementById('bbrNotater-tbody')
@@ -503,6 +505,30 @@ const UIRender = {
       }
 
       element_færdigbehandletAfslutningssagItems.appendChild(rowElement)
+    }
+  },
+
+
+  færdigbehandletPåbegyndelsesdato: (sag) => {
+
+    const element_færdigbehandletPåbegyndelsesdatoItems = document.getElementById('færdigbehandlet-påbegyndelsesdato-items')
+    
+    // Fjern alt indhold i færdigbehandlet afsluttet div
+    while (element_færdigbehandletPåbegyndelsesdatoItems.firstChild)
+    element_færdigbehandletPåbegyndelsesdatoItems.removeChild(element_færdigbehandletPåbegyndelsesdatoItems.firstChild)
+
+    for (let i = 0; i < sag.færdigbehandletPåbegyndelsesdato.length; i++) {
+      const rowElement = document.createElement('div')
+
+      // Hvis det er SYSTEM, sæt et em-tag og undlad at skrive dato
+      if (sag.færdigbehandletPåbegyndelsesdato[i].brugerID === 12) {
+        rowElement.textContent = '00-00-0000 Udført før sagsstyringssystem'
+      } else {
+        // Hvis det er person
+        rowElement.textContent = `${fn.datoConvert(sag.færdigbehandletPåbegyndelsesdato[i].timestampFærdigbehandletPåbegyndelsesdato)} ${sag.færdigbehandletPåbegyndelsesdato[i].brugerNavn}`
+      }
+
+      element_færdigbehandletPåbegyndelsesdatoItems.appendChild(rowElement)
     }
   },
 
