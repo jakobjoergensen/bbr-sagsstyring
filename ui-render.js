@@ -329,13 +329,13 @@ const UIRender = {
   updateCounters: () => {
 
     // Opdaterer angivelse af antal sager i de forskellige lister i navigationsdropdowns
-    // DBCtrl.getCounts('countIkkeTildeltTilladelse').then(result => { document.getElementById('navIkkeTildeltTilladelse-counter').textContent = result[0].count })
-    // DBCtrl.getCounts('countIkkeTildeltAfsluttet').then(result => { document.getElementById('navIkkeTildeltAfsluttet-counter').textContent = result[0].count })
-    // DBCtrl.getCounts('countTildeltTilladelse').then(result => { document.getElementById('navTildeltTilladelse-counter').textContent = result[0].count })
-    // DBCtrl.getCounts('countTildeltAfsluttet').then(result => { document.getElementById('navTildeltAfsluttet-counter').textContent = result[0].count })
-    // DBCtrl.getCounts('countOpfølgningsliste').then(result => { document.getElementById('navOpfølgningsliste-counter').textContent = result[0].count })
-    // DBCtrl.getCounts('countTildelt').then(result => { document.getElementById('navMineSager-counter').textContent = result[0].count })
-    // DBCtrl.getCounts('countPåbegyndelsesliste').then(result => { document.getElementById('navPåbegyndelsessager-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countIkkeTildeltTilladelse').then(result => { document.getElementById('navIkkeTildeltTilladelse-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countIkkeTildeltAfsluttet').then(result => { document.getElementById('navIkkeTildeltAfsluttet-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countTildeltTilladelse').then(result => { document.getElementById('navTildeltTilladelse-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countTildeltAfsluttet').then(result => { document.getElementById('navTildeltAfsluttet-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countOpfølgningsliste').then(result => { document.getElementById('navOpfølgningsliste-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countTildelt').then(result => { document.getElementById('navMineSager-counter').textContent = result[0].count })
+    DBCtrl.getCounts('countPåbegyndelsesliste').then(result => { document.getElementById('navPåbegyndelsessager-counter').textContent = result[0].count })
     
   }, 
 
