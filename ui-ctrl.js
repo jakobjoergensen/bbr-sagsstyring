@@ -431,6 +431,8 @@ const UICtrl = (() => {
       ['checked', 1]
     ]
 
+    console.log(params)
+
     DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingPåbegyndelsesdato', params)
       .then(() => {
         // Visuel feedback når færdigbehandlingen er gemt i DB

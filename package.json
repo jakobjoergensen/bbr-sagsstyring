@@ -1,6 +1,6 @@
 {
   "name": "bbr-sagsstyring-app",
-  "version": "2019.2.0",
+  "version": "2019.2.1",
   "description": "",
   "author": "Jakob Jørgensen",
   "main": "main.js",
@@ -26,7 +26,7 @@
   "build": {
     "appId": "dk.aarhus.bbrsagsstyring",
     "productName": "BBR sagsstyring",
-    "copyright": "Copyright © 2019 Aarhus Kommune",
+    "copyright": "Copyright © 2018-2019 Aarhus Kommune",
     "directories": {
       "buildResources": "."
     },
