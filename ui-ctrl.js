@@ -290,7 +290,7 @@ const UICtrl = (() => {
         
         UIRender.renderHvemHarSagen()
         UICtrl.listeInit(liste.selected)
-        UIRender.updateCounters()
+        //UIRender.updateCounters()
 
       })
       .catch(error => { console.log(error) })
@@ -319,7 +319,7 @@ const UICtrl = (() => {
         
         UIRender.renderHvemHarSagen()
         UICtrl.listeInit(liste.selected)
-        UIRender.updateCounters()
+        //UIRender.updateCounters()
 
       })
       .catch(error => { console.log(error) })
@@ -380,7 +380,7 @@ const UICtrl = (() => {
               
               // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
               UICtrl.listeInit(liste.selected)
-              UIRender.updateCounters()
+             // UIRender.updateCounters()
             })
             .catch(error => { console.log(error) })
 
@@ -409,7 +409,7 @@ const UICtrl = (() => {
         setTimeout(() => {
           // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
           UICtrl.listeInit(liste.selected)
-          UIRender.updateCounters()
+          //UIRender.updateCounters()
 
           // Luk modal vindue
           modal.close()
@@ -440,7 +440,7 @@ const UICtrl = (() => {
         setTimeout(() => {
           // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
           UICtrl.listeInit(liste.selected)
-          UIRender.updateCounters()
+          //UIRender.updateCounters()
 
           // Luk modal vindue
           modal.close()
