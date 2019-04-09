@@ -431,24 +431,25 @@ const UICtrl = (() => {
       ['checked', 1]
     ]
 
-    console.log(params)
-
     DBCtrl.execStoredProcedure('opdaterSagFærdigbehandlingPåbegyndelsesdato', params)
       .then(() => {
         // Visuel feedback når færdigbehandlingen er gemt i DB
         const card = document.getElementById('card-færdigbehandling-påbegyndelsesdato')
         fn.saveHighlight(card)
-
-        setTimeout(() => {
-          // sagen lægges automatisk tilbage til gruppen i stored procedure, opdater derfor liste og counters
-          UICtrl.listeInit(liste.selected)
-          //UIRender.updateCounters()
-
-          // Luk modal vindue
-          modal.close()
-        }, 500)
-
+        
+        // hent sagen
+        DBCtrl.getFærdigbehandlingerPåbegyndelsesdato(currentSag.sagID)
+        .then(data => {
+              
+          const sag = { færdigbehandletPåbegyndelsesdato: data}
+          UIRender.færdigbehandletPåbegyndelsesdato(sag)
           
+          // opdater derfor liste hvis det er påbegyndelseslisten der vises
+          if (liste.selected === 7)
+            UICtrl.listeInit(liste.selected)
+          
+        })
+        .catch(error => { console.log(error) })     
       })
   })
 
