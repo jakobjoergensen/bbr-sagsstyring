@@ -145,7 +145,9 @@ const DBCtrl = (() => {
         break
 
         case 'alle':
+          
           query = `SELECT * FROM view_sagAktuelAlle WHERE sagsnummer LIKE '%${ID}%' OR esdh LIKE '%${ID}%' OR datoModtaget LIKE '%${ID}%' OR datoAfgørelse LIKE '%${ID}%' OR datoAfsluttet LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
+          
         break
 
         case 'påbegyndelsessager':

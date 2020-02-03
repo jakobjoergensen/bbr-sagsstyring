@@ -897,7 +897,7 @@ const UICtrl = (() => {
         UIRender.clearSearchBox()
         UICtrl.clearSearchString()
       }
-      
+
       // Hvis det ikke er listen med alle sager eller hvis det er listen med alle sager hvor der er angivet et søgekriterie, indlæs som normalt
       if (liste.selected !== 6 || searchCriteria !== null)
         UICtrl.listeVisning(searchCriteria)
@@ -937,7 +937,7 @@ const UICtrl = (() => {
       // hent data
       DBCtrl.get(listeDef[liste.selected].listeNavn, searchCriteria)
         .then(result => {
-          
+          console.log(result)
           liste.items = result
 
           // sæt value på toggle opfølgningssager

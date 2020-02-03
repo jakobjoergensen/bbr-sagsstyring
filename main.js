@@ -13,6 +13,8 @@ const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = '${az}'`
 //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'az18982'` // bodil
 //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'azttj81'` // anette sonne
 //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'aztmbss'` // sanne
+//const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'az01602'` // henrik
+
 let mainWindow
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
 

@@ -69,7 +69,7 @@ const listeDef = [
     sortDirection: 'asc',
     toggle_opfølgningssager: true,
     searchString: '',
-    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'antalBBRnotater', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler']
+    columns: [SYSTEM_BUTTON_OVERFØR, 'brugerNavn', 'flow', 'sagsnummer', 'ejendomsnummer', 'esdh', 'datoModtaget', 'datoAfgørelse', 'datoAfsluttet', 'adresse', 'sagsindhold', 'sagsbehandler'] // bbr notater fjernet pga. performanceproblemer
   },
   {
     listeID: 7,
