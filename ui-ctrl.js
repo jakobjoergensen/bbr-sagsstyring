@@ -469,8 +469,6 @@ const UICtrl = (() => {
     // })
 
     // ************************ SØGEBOKS ****************************************************************
-    let searchDelay
-
 
     document.getElementById('search-form').addEventListener('submit', e => {
         e.preventDefault()
@@ -743,16 +741,6 @@ const UICtrl = (() => {
         // Generel method som benyttes til at kalde methods på UIRender til visning af lister.
         // ***
         listeVisning: (searchCriteria = null) => {
-
-            // Vis progress bar
-            // UIRender.renderProgressBar()
-
-            // Fjern gammel table
-            // UIRender.deleteChildren('data-content')
-
-            // UIRender.renderListHeadline()
-            // UIRender.renderListViewHeadlines()
-
 
             // hent data
             DBCtrl.get(listeDef[liste.selected].listeNavn, searchCriteria)

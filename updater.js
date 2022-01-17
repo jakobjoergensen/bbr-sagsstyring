@@ -12,70 +12,70 @@ autoUpdater.autoDownload = false
 // Check for updates
 exports.check = () => {
 
-  
-  // Start update check
-  autoUpdater.checkForUpdates()
 
-  // Listen for download (update) found
-  autoUpdater.on('update-available', () => {
+    // Start update check
+    autoUpdater.checkForUpdates()
 
-    // Track progress percent
-    let downloadProgress = 0
+    // Listen for download (update) found
+    autoUpdater.on('update-available', () => {
 
-    // Prompt user to update
-    dialog.showMessageBox({
-      type: 'info',
-      title: 'Ny version tilgængelig',
-      message: 'Der er en ny version af BBR-sagsstyring tilgængelig.',
-      buttons: ['Opdatér nu']
-    }, (buttonIndex) => {
+        // Track progress percent
+        let downloadProgress = 0
 
-      // If not 'Update' button, return
-      if (buttonIndex !== 0)
-        return
+        // Prompt user to update
+        dialog.showMessageBox({
+            type: 'info',
+            title: 'Ny version tilgængelig',
+            message: 'Der er en ny version af BBR-sagsstyring tilgængelig.',
+            buttons: ['Opdatér nu']
+        }, (buttonIndex) => {
 
-      // Else start download and show progress
-      autoUpdater.downloadUpdate()
+            // If not 'Update' button, return
+            if (buttonIndex !== 0)
+                return
 
-      // Create progress window
-      let progressWindow = new BrowserWindow({
-        width: 350,
-        height: 45,
-        useContentSize: true,
-        autoHideMenuBar: true,
-        maximizable: false,
-        fullscreen: false,
-        fullscreenable: false,
-        resizable: false
-      })
+            // Else start download and show progress
+            autoUpdater.downloadUpdate()
 
-      progressWindow.loadURL(`file://${__dirname}/renderer/update-progress.html`)
+            // Create progress window
+            let progressWindow = new BrowserWindow({
+                width: 350,
+                height: 45,
+                useContentSize: true,
+                autoHideMenuBar: true,
+                maximizable: false,
+                fullscreen: false,
+                fullscreenable: false,
+                resizable: false
+            })
 
-      // Handle win close
-      progressWindow.on('closed', () => progressWindow = null)
+            progressWindow.loadURL(`file://${__dirname}/renderer/update-progress.html`)
 
-      // Listen for progress request from progress.html
-      ipcMain.on('download-progress-request', e => {
-        e.returnValue = downloadProgress
-      })
+            // Handle win close
+            progressWindow.on('closed', () => progressWindow = null)
 
-      // Track download progress on autoupdater
-      autoUpdater.on('download-progress', d => {
-        downloadProgress = d.percent
-        console.log('Progress: '+ d.percent)
-      })
+            // Listen for progress request from progress.html
+            ipcMain.on('download-progress-request', e => {
+                e.returnValue = downloadProgress
+            })
 
-      // Listen for completed update download
-      autoUpdater.on('update-downloaded', () => {
+            // Track download progress on autoupdater
+            autoUpdater.on('download-progress', d => {
+                downloadProgress = d.percent
+                console.log('Progress: ' + d.percent)
+            })
 
-        // Close progressWindow
-        if (progressWindow)
-          progressWindow.close()
+            // Listen for completed update download
+            autoUpdater.on('update-downloaded', () => {
 
-        // Quit and install update
-        autoUpdater.quitAndInstall()
+                // Close progressWindow
+                if (progressWindow)
+                    progressWindow.close()
 
-      })
+                // Quit and install update
+                autoUpdater.quitAndInstall()
+
+            })
+        })
     })
-  })
 }

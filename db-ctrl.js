@@ -37,31 +37,31 @@ const DBCtrl = (() => {
 
                 switch (view) {
                     case 'countIkkeTildeltTilladelse':
-                        query = 'SELECT COUNT(*) count FROM vSagerIkkeTildeltTilladelse'
+                        query = 'EXEC spGetAntalSagerIkkeTildeltTilladelse'
                         break
 
                     case 'countIkkeTildeltAfsluttet':
-                        query = 'SELECT COUNT(*) count FROM vSagerIkkeTildeltAfsluttet'
+                        query = 'EXEC spGetAntalSagerIkkeTildeltAfsluttet'
                         break
 
                     case 'countTildeltTilladelse':
-                        query = 'SELECT COUNT(*) count FROM vSagerTildeltTilladelse'
+                        query = 'EXEC spGetAntalSagerTildeltTilladelse'
                         break
 
                     case 'countTildeltAfsluttet':
-                        query = 'SELECT COUNT(*) count FROM vSagerTildeltAfsluttet'
+                        query = 'EXEC spGetAntalSagerTildeltAfsluttet'
                         break
 
                     case 'countTildelt':
-                        query = `SELECT COUNT(*) count FROM vSagerTildelt WHERE brugerID = ${bruger.ID}`
+                        query = `EXEC spGetAntalSagerTildeltBruger @BrugerId = ${bruger.ID}`
                         break
 
                     case 'countOpfølgningsliste':
-                        query = 'SELECT DISTINCT COUNT(sagId) count FROM vSagerOpfølgning '
+                        query = 'EXEC spGetAntalSagerOpfølgning'
                         break
 
                     case 'countPåbegyndelsesliste':
-                        query = 'SELECT DISTINCT COUNT(sagId) count FROM vSagerPåbegyndelse '
+                        query = 'EXEC spGetAntalSagerPåbegyndelse'
                         break
 
                 }
@@ -80,75 +80,35 @@ const DBCtrl = (() => {
 
             switch (view) {
                 case 'ikkeTildeltTilladelse':
-                    query = `SELECT
-                    s.*
-                    ,m.color
-                  FROM
-                    vSagerIkkeTildeltTilladelse s
-                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
-                  ORDER BY s.datoAfgørelse`
+                    query = `EXEC spGetIkkeTildeltTilladelse @BrugerId = ${bruger.ID}`
                     break
 
                 case 'ikkeTildeltAfsluttet':
-                    query = `SELECT
-                    s.*
-                    ,m.color
-                  FROM
-                    vSagerIkkeTildeltAfsluttet s
-                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
-                  ORDER BY s.datoAfsluttet`
+                    query = `EXEC spGetIkkeTildeltAfsluttet @BrugerId = ${bruger.ID}`
                     break
 
                 case 'tildeltTilladelse':
-                    query = `SELECT
-                    s.*
-                    ,m.color
-                  FROM
-                    vSagerTildeltTilladelse s
-                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
-                  ORDER BY s.datoAfgørelse`
+                    query = `EXEC spGetTildeltTilladelse @BrugerId = ${bruger.ID}`
                     break
 
                 case 'tildeltAfsluttet':
-                    query = `SELECT
-                    s.*
-                    ,m.color
-                  FROM
-                    vSagerTildeltAfsluttet s
-                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
-                  ORDER BY s.datoAfsluttet`
+                    query = `EXEC spGetTildeltAfsluttet @BrugerId = ${bruger.ID}`
                     break
 
                 case 'tildelt':
-                    query = `SELECT
-                    s.*
-                    ,m.color
-                  FROM
-                    vSagerTildelt s
-                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
-                  WHERE
-                    s.brugerID = ${bruger.ID}`
+                    query = `EXEC spGetTildelt @BrugerId = ${bruger.ID}`
                     break
 
                 case 'sag':
-                    query = `SELECT
-                      s.*
-                      ,m.color
-                    FROM vSager s
-                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
-                    WHERE s.sagID = ${ID}`
+                    query = `EXEC spGetSag @BrugerId = ${bruger.ID}, @SagId = ${ID}`
                     break
 
                 case 'opfølgningsliste':
-                    query = `SELECT
-                      s.*
-                      ,m.color
-                    FROM vSagerOpfølgning s
-                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}`
+                    query = `EXEC spGetOpfølgningssager @BrugerId = ${bruger.ID}`
                     break
 
                 case 'alle':
-                    query = `SELECT * FROM vSager WHERE sagsnummer LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
+                    query = `EXEC søgAlleSager @søgeord = ${ID}`
                     break
 
                     // case 'påbegyndelsessager':
@@ -166,7 +126,6 @@ const DBCtrl = (() => {
                 return getData(query)
                     .then(result => {
                         const populatedItems = ItemCtrl.populateItemList(result)
-                        console.log(populatedItems)
                         return populatedItems
                     })
                     .catch(err => console.log(err))
@@ -197,69 +156,27 @@ const DBCtrl = (() => {
 
 
         getBBRNotater: sagID => {
-            query = `SELECT
-              sagID,
-              datoOprettet,
-              notatNummer,
-              notatType,
-              entitetsidentifikation,
-              notatTekst
-              FROM bbrNotat
-              WHERE sagID = ${sagID}`
-
+            query = `EXEC spGetBbrNotater @SagID = ${sagID}`
             return getData(query)
         },
 
         getNote: sagID => {
-            query = `SELECT
-                n.noteID,
-                n.sagID,
-                n.BrugerID,
-                n.BrugerNavn,
-                n.timestamp,
-                n.tekst
-              FROM vNoter n
-              WHERE n.sagID = ${sagID}`
-
+            query = `EXEC spGetNote @SagID = ${sagID}`
             return getData(query)
         },
 
         getFærdigbehandlingerTilladelse: sagID => {
-            query = `SELECT
-                s.brugerID,
-                s.brugerNavn,
-                s.BehandletTidspunkt
-              FROM vSagerFærdigbehandletTilladelse s
-              WHERE s.sagID = '${sagID}'
-              ORDER BY s.BehandletTidspunkt DESC
-              `
-
+            query = `EXEC spGetFærdigbehandletTilladelse @SagID = ${sagID}`
             return getData(query)
         },
 
         getFærdigbehandlingerAfsluttet: sagID => {
-            query = `SELECT
-                brugerID,
-                brugerNavn,
-                BehandletTidspunkt
-              FROM vSagerFærdigbehandletAfsluttet
-              WHERE sagID = '${sagID}'
-              ORDER BY BehandletTidspunkt DESC
-              `
-
+            query = `EXEC spGetFærdigbehandletAfsluttet @SagID = ${sagID}`
             return getData(query)
         },
 
         getFærdigbehandlingerPåbegyndelsesdato: sagID => {
-            query = `SELECT
-              brugerID,
-              brugerNavn,
-              BehandletTidspunkt
-              FROM vSagerFærdigbehandletPåbegyndelse
-              WHERE sagID = '${sagID}'
-              ORDER BY BehandletTidspunkt DESC
-              `
-
+            query = `EXEC spGetFærdigbehandletPåbegyndelse @SagID = ${sagID}`
             return getData(query)
         },
 

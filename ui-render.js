@@ -373,49 +373,6 @@ const UIRender = (() => {
                 // DBCtrl.getCounts('countPåbegyndelsesliste').then(result => { document.getElementById('navPåbegyndelsessager-counter').textContent = result[0].count })
         },
 
-        renderNav: () => {
-
-            const navElements = [
-                { id: 'navIkkeTildeltTilladelse', text: 'Tilladelsessager' },
-                { id: 'navIkkeTildeltAfsluttet', text: 'Afslutningssager' },
-                { id: 'navTildeltTilladelse', text: 'Tilladelsessager' },
-                { id: 'navTildeltAfsluttet', text: 'Afslutningssager' },
-                { id: 'navOpfølgningsliste', text: 'Opfølgningsliste' },
-                { id: 'navMineSager', text: 'Mine sager' },
-                // { id: 'navPåbegyndelsessager', text: 'Påbegyndelsessager' }
-            ]
-
-            navElements.forEach(element => {
-
-                const link = document.getElementById(element.id)
-                const span = document.createElement('span')
-                const small = document.createElement('small')
-                small.textContent = '...'
-                small.setAttribute('id', element.id + '-counter')
-                link.textContent = element.text
-
-                span.classList.add('right')
-                span.appendChild(small)
-                link.appendChild(span)
-            })
-
-        },
-
-        renderNavElementMineSager: (elementID, elementText, count) => {
-            const link = document.getElementById(elementID)
-            const span = document.createElement('span')
-            const small = document.createElement('small')
-
-            small.textContent = count
-            link.textContent = elementText
-
-            span.classList.add('badge')
-            span.classList.add('white-text')
-
-            span.appendChild(small)
-            link.appendChild(span)
-        },
-
         renderSag: (sag) => {
             // DOM elementer i modalvindue
             const element_sagsnummer = document.getElementById('sagsnummer')

@@ -70,18 +70,8 @@ const NavCtrl = {
 
     init: () => {
 
-        // vis progressbar
-        UIRender.renderProgressBar()
-
-        // Indlæs navigationselementer
-        UIRender.renderNav()
-
         // Indlæs standardindstilling for antal sager der skal overføres
         UIRender.optionsOverførSager()
-
-        // Indlæs farvetemaet
-        UIRender.updateColorTheme()
-
 
         // åbn startside
         UICtrl.listeInit(bruger.settings.opstartsside)
@@ -90,9 +80,6 @@ const NavCtrl = {
         if (SQLConfig.database === 'BBRsagsstyring_Test') {
             document.getElementsByTagName('body')[0].classList.add('test')
         }
-
-        UIRender.deleteProgressBar()
-
     }
 }
 
@@ -101,35 +88,12 @@ const NavCtrl = {
 // App init
 NavCtrl.init()
 
-// let modal
-
-// document.addEventListener('DOMContentLoaded', () => {
-
-// // Init Materialize modal
-// modal = M.Modal.init(document.getElementById('modal-single-view'), {
-//     opacity: 0.5,
-//     inDuration: 0,
-//     outDuration: 0,
-//     preventScrolling: false,
-//     dismissible: true
-// })
-
-// // Init tooltips
-// const elems_tooltips = document.querySelectorAll('.tooltipped')
-// M.Tooltip.init(elems_tooltips, {
-//     enterDelay: 500,
-//     exitDelay: 250
-// })
-
-// })
-
-
 
 // Update counters/nav løbende
 ;
 (function() {
     UIRender.updateCounters()
-    setTimeout(arguments.callee, 10 * 60 * 1000) // min * sekunder * millisekunder = hver 10. minut
+    setTimeout(arguments.callee, 5 * 60 * 1000) // min * sekunder * millisekunder = hver 10. minut
 })()
 
 

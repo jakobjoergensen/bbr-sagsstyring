@@ -1,5 +1,5 @@
 const { app, Menu, BrowserWindow, ipcMain, dialog, session } = require('electron')
-const updater = require('./updater')
+    // const updater = require('./updater')
 const { SQLConfig } = require('./sql-config')
 const path = require('path')
 const sql = require('mssql/msnodesqlv8')
@@ -9,12 +9,6 @@ const sql = require('mssql/msnodesqlv8')
 const az = process.env['USERPROFILE'].split(path.sep)[2]
 
 const loadUserQuery = `SELECT * FROM vBrugere WHERE az = '${az}'`
-    // const loadUserQuery = `SELECT * FROM view_brugerAktuelNy WHERE az = 'aztp006'` // karina
-    //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'aztp009'` // janne az18982
-    //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'az18982'` // bodil
-    //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'azttj81'` // anette sonne
-    //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'aztmbss'` // sanne
-    //const loadUserQuery = `SELECT * FROM view_brugerAktuel WHERE az = 'az01602'` // henrik
 
 let mainWindow
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
