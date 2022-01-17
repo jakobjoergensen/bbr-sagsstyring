@@ -1,0 +1,250 @@
+<!-- Sagsvisning -->
+<div class="columns data-headline-columns ">
+    <div class="column has-background-light mb-0 pb-0 mt-0">
+        <h1 class="is-size-4 has-text-dark p-2 ml-3 data-headline"><span id="sag-titel-sagsnummer"></span> | <span id="sag-titel"></span></h1>
+    </div>
+
+    <div class="column mt-0 is-narrow has-background-light">
+
+        <div id="markering" class="mt-4">
+            <div class="field is-grouped">
+                <div class="control">
+                    <input class="radio-black" type="radio" name="color" value="null" id="radio-black" /><label for="radio-black"></label>
+                </div>
+                <div class="control">
+                    <input class="radio-blue" type="radio" name="color" value="1" id="radio-blue" /><label for="radio-blue"></label>
+                </div>
+                <div class="control">
+                    <input class="radio-green" type="radio" name="color" value="2" id="radio-green" /><label for="radio-green"></label>
+                </div>
+                <div class="control">
+                    <input class="radio-amber" type="radio" name="color" value="3" id="radio-amber" /><label for="radio-amber"></label>
+                </div>
+                <div class="control">
+                    <input class="radio-red" type="radio" name="color" value="4" id="radio-red" /><label for="radio-red"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="columns">
+    <div class="column is-4">
+        <div class="mt-3 ml-3">
+
+            <div class="has-background-grey-lighter has-text-black mt-2 p-2 is-uppercase letter-space is-size-7 has-text-weight-bold">Sagsoplysninger</div>
+
+            <div class="has-background-white-bis mb-5 ">
+                <div class="p-2">
+
+                    <div class="mr-4 ml-1 mt-2 mb-2">
+                        <div class="">
+                            <div class="data-title">Sagsnummer</div>
+                            <div class="data-value" id="sagsnummer"></div>
+                        </div>
+                        <div>
+                            <div class="data-title">Ejendomsnummer</div>
+                            <div class="data-value" id="ejendomsnummer"></div>
+                        </div>
+                        <div class="">
+                            <div class="data-title">Sagsbehandler</div>
+                            <div class="data-value" id="sagsbehandler"></div>
+                        </div>
+                    </div>
+                    <div class="ml-1 mr-4 mt-5 mb-2">
+                        <div class="">
+                            <div class="data-title">Adresse</div>
+                            <div class="data-value" id="adresse"></div>
+                        </div>
+                        <div class="">
+                            <div class="data-title">Overskrift</div>
+                            <div class="data-value" id="sagsindhold"></div>
+                        </div>
+                    </div>
+                    <div class="ml-1 mr-4 mt-5 mb-2">
+                        <div class="">
+                            <div class="data-title">Modtagelse</div>
+                            <div class="data-value" id="dato-modtaget"></div>
+                        </div>
+                        <div class="">
+                            <div class="data-title">Afgørelse</div>
+                            <div class="data-value" id="dato-afgørelse"></div>
+                        </div>
+                        <div class="">
+                            <div class="data-title">Afslutning</div>
+                            <div class="data-value" id="dato-afsluttet"></div>
+                        </div>
+                    </div>
+                    <div class="ml-1 mr-4 mt-5 mb-2">
+                        <div class="">
+                            <div class="data-title">Sagsart</div>
+                            <div class="data-value" id="sagsart"></div>
+                        </div>
+                        <div class="">
+                            <div class="data-title">Politisk kategori</div>
+                            <div class="data-value" id="politisk-kategori"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="mt-3">
+
+
+
+            <div class="has-background-white-bis mt-2 mb-5 ">
+                <div class="has-background-grey-lighter has-text-black p-2 is-uppercase letter-space is-size-7 has-text-weight-bold">Hvem har sagen?</div>
+                <div class="columns p-2">
+                    <div class="column mt-2">
+                        <div class="is-pulled-left">
+                            <button id="hvem-har-sagen-remove-button" class="button is-small is-danger is-light hidden">Fjern</button>
+                        </div>
+                        <div class="ml-2 is-pulled-left">
+                            <div id="hvem-har-sagen-brugernavn" class="has-text-weight-bold"><span id="hvem-har-sagen-timestamp"></span></div>
+                            <div id="hvem-har-sagen-timestamp" class="has-text-grey-light is-size-7"><span id="hvem-har-sagen-brugernavn"></span></div>
+                        </div>
+                        <div class="right">
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <div class="select is-info is-small">
+                                        <select id="hvem-har-sagen">
+                                            <option value="tom"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <button id="hvem-har-sagen-save-button" class="button is-small is-info is-pulled-right">Gem</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="has-background-white-bis mt-2 mb-5 ">
+                <div class="has-background-grey-lighter has-text-black p-2 is-uppercase letter-space is-size-7 has-text-weight-bold">Tilladelsessag</div>
+                <div class="columns p-2">
+                    <div class="column mt-2">
+                        <div id="færdigbehandlet-tilladelsessag-items"></div>
+
+                    </div>
+
+
+                    <div class="column mt-2">
+                        <div class="right">
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <div class="select is-small is-info">
+                                        <select name="" id="færdigbehandlet-tilladelsessag-brugerliste" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <button id="færdigbehandling-tilladelsessag" class="button is-info is-small is-pulled-right">Gem</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="has-background-white-bis mt-2 mb-5 ">
+
+                <div class="has-background-grey-lighter has-text-black p-2 is-uppercase letter-space is-size-7 has-text-weight-bold">Påbegyndelsesdato</div>
+                <div class="columns p-2">
+                    <div class="column mt-2">
+                        <div id="færdigbehandlet-påbegyndelsesdato-items"></div>
+                    </div>
+
+                    <div class="column mt-2">
+                        <div class="right">
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <div class="select is-small is-info">
+                                        <select name="" id="færdigbehandlet-påbegyndelsesdato-brugerliste" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <button id="færdigbehandling-påbegyndelsesdato" class="button is-info is-small is-pulled-right">Gem</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="has-background-white-bis mt-2 mb-5 ">
+
+                <div class="has-background-grey-lighter has-text-black p-2 is-uppercase letter-space is-size-7 has-text-weight-bold">Afslutningssag</div>
+                <div class="columns p-2">
+                    <div class="column mt-2">
+                        <div id="færdigbehandlet-afslutningssag-items"></div>
+                    </div>
+
+                    <div class="column mt-2">
+                        <div class="right">
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <div class="select is-small is-info">
+                                        <select name="" id="færdigbehandlet-afslutningssag-brugerliste" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <button id="færdigbehandling-afslutningssag" class="button is-info is-small is-pulled-right">Gem</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="has-background-white-bis mt-2 mb-5 ">
+
+                <div class="has-background-grey-lighter has-text-black mt-2 p-2 is-uppercase letter-space is-size-7 has-text-weight-bold">Notater fra BBR</div>
+                <div class="p-2">
+
+                    <table class="mt-2 table is-bordered">
+                        <thead>
+                            <th>Dato</th>
+                            <th>Nr.</th>
+                            <th>Entitet/Adresse</th>
+                            <th>Tekst</th>
+                        </thead>
+                        <tbody id="bbrNotater-tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="has-background-white-bis mt-2 mb-5 ">
+
+                <div class="has-background-grey-lighter has-text-black mt-2 p-2 is-uppercase letter-space is-size-7 has-text-weight-bold">Interne noter </div>
+                <div class="p-2">
+
+                    <div class="field">
+                        <div class="control">
+                            <textarea id="note" class="textarea" rows="6" placeholder="Tilføj interne noter her ..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-0 ml-1 is-pulled-left">
+                        <!-- <div id="hvem-har-sagen-brugernavn" class="has-text-grey"></div> -->
+                        <div class="has-text-grey-light is-size-7"><span id="note-timestamp"></span> <span id="note-brugernavn"></span></div>
+                    </div>
+                    <button id="gem-note" class="button is-info is-pulled-right ml-2">Gem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

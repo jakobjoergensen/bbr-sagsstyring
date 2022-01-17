@@ -1,0 +1,109 @@
+<!-- Indstillinger -->
+<h1 class="is-size-4 has-background-light has-text-dark pt-2 pb-2 pl-4 data-headline">Indstillinger</h1>
+<div class="columns">
+    <div class="column">
+        <div class="mt-3 ml-3">
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label for="settings-bruger-navn" class="label">Brugernavn</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input type="text" class="input" name="settings-bruger-navn" id="settings-bruger-navn" value="">
+                        </div>
+                        <p class="help">Dit navn som det fremgår i programmet hos alle</p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label for="settings-default-antal-sager" class="label">Antal sager</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+
+                        <div class="control">
+                            <input class="input" type="number" name="settings-antal-sager" id="settings-antal-sager" value="">
+                        </div>
+                        <p class="help">Antal sager der bliver overført ved automatisk overførelsesfunktion</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label for="settings-default-antal-sager" class="label">Overførelse - sagstype</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+
+                        <div class="control">
+
+                            <div class="select">
+
+                                <select name="settings-default-overfør-type" id="settings-default-overfør-type" class="select">
+                         <option value="" disabled>Vælg</option>
+                         <option value="1">Tilladelsessager</option>
+                         <option value="2">Afslutningssager</option>
+                     </select>
+                            </div>
+                        </div>
+                        <p class="help">Sagstype der bliver overført ved automatisk overførelsesfunktion</p>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label for="settings-load-startup" class="label">Opstartsside</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+
+                        <div class="control">
+
+                            <div class="select">
+
+                                <select name="settings-load-startup" id="settings-load-startup" class="select">
+                         <option value="" disabled>Vælg</option>
+                         <option value="0">Mine sager</option>
+                         <option value="3">Tilladelsessager under behandling</option>
+                         <option value="4">Afslutningssager under behandling</option>
+                         <option value="1">Afventende tilladelsessager</option>
+                         <!-- <option value="7">Påbegyndelsessager</option> -->
+                         <option value="2">Afventende afslutningssager</option>
+                         <option value="5">Opfølgningslisten</option>
+                         <option value="6">Alle sager</option>
+                     </select>
+                            </div>
+                        </div>
+                        <p class="help">Siden der åbnes ved opstart af programmet</p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label">
+                    <!-- Left empty for spacing -->
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <button id="setting-save-button" class="button is-info">Gem</button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

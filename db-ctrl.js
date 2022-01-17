@@ -1,201 +1,203 @@
 const sql = require('mssql/msnodesqlv8')
 const { SQLConfig } = require('./sql-config')
 const { ItemCtrl } = require('./item-ctrl')
+const { fn } = require('./functions')
 
 
 const DBCtrl = (() => {
-  
-  const pool = new sql.ConnectionPool(SQLConfig).connect()
-  
 
-  // Private methods ----------------------------------
-  function getData (queryString) {
-    
-    return pool
-      .then(pool => {
-        return pool.request().query(queryString)
-      })
-      .then(result => {
-        return result['recordset']
-      })
-      .catch(error => { console.log(error) })
-  }
+    const pool = new sql.ConnectionPool(SQLConfig).connect()
 
 
-  
-  // Public methods ----------------------------------
-  return {
+    // Private methods ----------------------------------
+    function getData(queryString) {
 
-    // Counter quries
-    getCounts: (view) => {
-      
-      try {
-        let query
-
-        switch (view) {
-          case 'countIkkeTildeltTilladelse':
-            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltTilladelse'
-          break
-
-          case 'countIkkeTildeltAfsluttet':
-            query = 'SELECT COUNT(*) count FROM view_sagIkkeTildeltAfsluttet'
-          break
-
-          case 'countTildeltTilladelse':
-            query = 'SELECT COUNT(*) count FROM view_sagTildeltTilladelse'
-          break
-
-          case 'countTildeltAfsluttet':
-            query = 'SELECT COUNT(*) count FROM view_sagTildeltAfsluttet'
-          break
-
-          case 'countTildelt':
-            query = 'SELECT COUNT(*) count FROM view_sagTildelt WHERE tildeltBrugerID = ' + bruger.ID
-          break
-
-          case 'countOpfølgningsliste':
-            query = 'SELECT COUNT(*) OVER() count FROM view_sagOpfølgning GROUP BY sagID'
-          break
-
-          case 'countPåbegyndelsesliste':
-            query = 'SELECT COUNT(*) OVER() count FROM view_påbegyndelsessager'
-          break
-
-        }
-        
-        // kør forespørgsel
-        return getData(query)
-        
-      } catch (err) { console.log(err) } 
-    },
+        return pool
+            .then(pool => {
+                fn.showLoading()
+                return pool.request().query(queryString)
+            })
+            .then(result => {
+                fn.hideLoading()
+                return result['recordset']
+            })
+            .catch(error => { console.log(error) })
+    }
 
 
-    // Generel quries
-    get: (view, ID = null) => {
-      
-      let query
 
-      switch (view) {
-        case 'ikkeTildeltTilladelse':
-          query = `SELECT
-                    view_sagIkkeTildeltTilladelse.*
-                    ,markering.color
+    // Public methods ----------------------------------
+    return {
+
+        // Counter quries
+        getCounts: (view) => {
+
+            try {
+                let query
+
+                switch (view) {
+                    case 'countIkkeTildeltTilladelse':
+                        query = 'SELECT COUNT(*) count FROM vSagerIkkeTildeltTilladelse'
+                        break
+
+                    case 'countIkkeTildeltAfsluttet':
+                        query = 'SELECT COUNT(*) count FROM vSagerIkkeTildeltAfsluttet'
+                        break
+
+                    case 'countTildeltTilladelse':
+                        query = 'SELECT COUNT(*) count FROM vSagerTildeltTilladelse'
+                        break
+
+                    case 'countTildeltAfsluttet':
+                        query = 'SELECT COUNT(*) count FROM vSagerTildeltAfsluttet'
+                        break
+
+                    case 'countTildelt':
+                        query = `SELECT COUNT(*) count FROM vSagerTildelt WHERE brugerID = ${bruger.ID}`
+                        break
+
+                    case 'countOpfølgningsliste':
+                        query = 'SELECT DISTINCT COUNT(sagId) count FROM vSagerOpfølgning '
+                        break
+
+                    case 'countPåbegyndelsesliste':
+                        query = 'SELECT DISTINCT COUNT(sagId) count FROM vSagerPåbegyndelse '
+                        break
+
+                }
+
+                // kør forespørgsel
+                return getData(query)
+
+            } catch (err) { console.log(err) }
+        },
+
+
+        // Generel quries
+        get: (view, ID = null) => {
+
+            let query
+
+            switch (view) {
+                case 'ikkeTildeltTilladelse':
+                    query = `SELECT
+                    s.*
+                    ,m.color
                   FROM
-                    view_sagIkkeTildeltTilladelse
-                    LEFT JOIN markering ON view_sagIkkeTildeltTilladelse.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagIkkeTildeltTilladelse.datoAfgørelse`
-        break
+                    vSagerIkkeTildeltTilladelse s
+                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
+                  ORDER BY s.datoAfgørelse`
+                    break
 
-        case 'ikkeTildeltAfsluttet':
-          query = `SELECT
-                    view_sagIkkeTildeltAfsluttet.*
-                    ,markering.color
+                case 'ikkeTildeltAfsluttet':
+                    query = `SELECT
+                    s.*
+                    ,m.color
                   FROM
-                    view_sagIkkeTildeltAfsluttet
-                    LEFT JOIN markering ON view_sagIkkeTildeltAfsluttet.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagIkkeTildeltAfsluttet.datoAfsluttet`
-        break
+                    vSagerIkkeTildeltAfsluttet s
+                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
+                  ORDER BY s.datoAfsluttet`
+                    break
 
-        case 'tildeltTilladelse':
-          query = `SELECT
-                    view_sagTildeltTilladelse.*
-                    ,markering.color
+                case 'tildeltTilladelse':
+                    query = `SELECT
+                    s.*
+                    ,m.color
                   FROM
-                    view_sagTildeltTilladelse
-                    LEFT JOIN markering ON view_sagTildeltTilladelse.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagTildeltTilladelse.datoAfgørelse`
-        break
+                    vSagerTildeltTilladelse s
+                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
+                  ORDER BY s.datoAfgørelse`
+                    break
 
-        case 'tildeltAfsluttet':
-          query = `SELECT
-                    view_sagTildeltAfsluttet.*
-                    ,markering.color
+                case 'tildeltAfsluttet':
+                    query = `SELECT
+                    s.*
+                    ,m.color
                   FROM
-                    view_sagTildeltAfsluttet
-                    LEFT JOIN markering ON view_sagTildeltAfsluttet.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  ORDER BY view_sagTildeltAfsluttet.datoAfsluttet`
-        break
+                    vSagerTildeltAfsluttet s
+                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
+                  ORDER BY s.datoAfsluttet`
+                    break
 
-        case 'tildelt':
-          query = `SELECT
-                  view_sagTildelt.*
-                  ,markering.color
+                case 'tildelt':
+                    query = `SELECT
+                    s.*
+                    ,m.color
                   FROM
-                    view_sagTildelt
-                    LEFT JOIN markering ON view_sagTildelt.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
+                    vSagerTildelt s
+                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
                   WHERE
-                    view_sagTildelt.tildeltBrugerID = ${bruger.ID}`
-        break
+                    s.brugerID = ${bruger.ID}`
+                    break
 
-        case 'sag':
-          query = `SELECT
-                  view_sag.*
-                  ,markering.color
-                  FROM view_sag
-                  LEFT JOIN markering ON view_sag.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}
-                  WHERE view_sag.sagID = ${ID}`
-        break
+                case 'sag':
+                    query = `SELECT
+                      s.*
+                      ,m.color
+                    FROM vSager s
+                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}
+                    WHERE s.sagID = ${ID}`
+                    break
 
-        case 'opfølgningsliste':
-          query = `SELECT
-                  view_sagOpfølgning.*
-                  ,markering.color
-                  FROM view_sagOpfølgning
-                  LEFT JOIN markering ON view_sagOpfølgning.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
-        break
+                case 'opfølgningsliste':
+                    query = `SELECT
+                      s.*
+                      ,m.color
+                    FROM vSagerOpfølgning s
+                    LEFT JOIN markering m ON s.sagID = m.sagID AND m.brugerID = ${bruger.ID}`
+                    break
 
-        case 'alle':
-          
-          query = `SELECT * FROM view_sagAktuelAlle WHERE sagsnummer LIKE '%${ID}%' OR esdh LIKE '%${ID}%' OR datoModtaget LIKE '%${ID}%' OR datoAfgørelse LIKE '%${ID}%' OR datoAfsluttet LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
-          
-        break
+                case 'alle':
+                    query = `SELECT * FROM vSager WHERE sagsnummer LIKE '%${ID}%' OR adresse LIKE '%${ID}%' OR sagsindhold LIKE '%${ID}%'`
+                    break
 
-        case 'påbegyndelsessager':
-          query = `SELECT
-                  view_påbegyndelsessager.*
-                  ,markering.color
-                  FROM view_påbegyndelsessager
-                  LEFT JOIN markering ON view_påbegyndelsessager.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
-        break
-      }
-      
-      // kør forespørgsel
-      if (query) {
-        
-        return getData(query)
-          .then(result => {
-            const populatedItems = ItemCtrl.populateItemList(result)
-            return populatedItems
-          })
-          .catch(err => console.log(err))
-      }
-    },
+                    // case 'påbegyndelsessager':
+                    //     query = `SELECT
+                    //   view_påbegyndelsessager.*
+                    //   ,markering.color
+                    //   FROM view_påbegyndelsessager
+                    //   LEFT JOIN markering ON view_påbegyndelsessager.sagID = markering.sagID AND markering.brugerID = ${bruger.ID}`
+                    //     break
+            }
 
-    getKPITilladelsessager: async (datoMin, datoMax) => {
-      query = `SELECT *
-              FROM view_kpi_antalFærdigbehandletTilladelseBruger
-              WHERE brugerID = ${bruger.ID}
-              AND datoFærdigbehandletTilladelse >= '${datoMin}'
-              AND datoFærdigbehandletTilladelse <= '${datoMax}'
+            // kør forespørgsel
+            if (query) {
+
+                return getData(query)
+                    .then(result => {
+                        const populatedItems = ItemCtrl.populateItemList(result)
+                        console.log(populatedItems)
+                        return populatedItems
+                    })
+                    .catch(err => console.log(err))
+            }
+        },
+
+        getKPITilladelsessager: async(datoMin, datoMax) => {
+            query = `SELECT k.*
+              FROM vKpiAntalFærdigbehandletTilladelse k
+              WHERE k.brugerID = ${bruger.ID}
+              AND k.datoFærdigbehandletTilladelse >= '${datoMin}'
+              AND k.datoFærdigbehandletTilladelse <= '${datoMax}'
               `
-      
-      return getData(query)
-    },
 
-    getKPIAfslutningssager: async (datoMin, datoMax) => {
-      query = `SELECT *
-              FROM view_kpi_antalFærdigbehandletAfsluttetBruger
-              WHERE brugerID = ${bruger.ID}
-              AND datoFærdigbehandletAfslutning >= '${datoMin}'
-              AND datoFærdigbehandletAfslutning <= '${datoMax}'
+            return getData(query)
+        },
+
+        getKPIAfslutningssager: async(datoMin, datoMax) => {
+            query = `SELECT k.*
+              FROM vKpiAntalFærdigbehandletAfsluttet k
+              WHERE k.brugerID = ${bruger.ID}
+              AND k.datoFærdigbehandletAfslutning >= '${datoMin}'
+              AND k.datoFærdigbehandletAfslutning <= '${datoMax}'
               `
-      
-      return getData(query)
-    },
+
+            return getData(query)
+        },
 
 
-    getBBRNotater: sagID => {
-      query = `SELECT
+        getBBRNotater: sagID => {
+            query = `SELECT
               sagID,
               datoOprettet,
               notatNummer,
@@ -205,87 +207,93 @@ const DBCtrl = (() => {
               FROM bbrNotat
               WHERE sagID = ${sagID}`
 
-      return getData(query)
-    },
+            return getData(query)
+        },
 
-    getNote: sagID => {
-      query = `SELECT
-              noteID,
-              sagID,
-              ændretAfBrugerID,
-              ændretAfBrugerNavn,
-              timestamp,
-              tekst
-              FROM view_noteAktuel
-              WHERE sagID = ${sagID}`
+        getNote: sagID => {
+            query = `SELECT
+                n.noteID,
+                n.sagID,
+                n.BrugerID,
+                n.BrugerNavn,
+                n.timestamp,
+                n.tekst
+              FROM vNoter n
+              WHERE n.sagID = ${sagID}`
 
-      return getData(query)
-    },
+            return getData(query)
+        },
 
-    getFærdigbehandlingerTilladelse: sagID => {
-      query = `SELECT
-              brugerID,
-              brugerNavn,
-              timestampFærdigbehandletTilladelse        
-              FROM view_sagerFærdigbehandletTilladelse
-              WHERE sagID = '${sagID}'
-              ORDER BY timestampFærdigbehandletTilladelse DESC
+        getFærdigbehandlingerTilladelse: sagID => {
+            query = `SELECT
+                s.brugerID,
+                s.brugerNavn,
+                s.BehandletTidspunkt
+              FROM vSagerFærdigbehandletTilladelse s
+              WHERE s.sagID = '${sagID}'
+              ORDER BY s.BehandletTidspunkt DESC
               `
 
-      return getData(query)
-    },
+            return getData(query)
+        },
 
-    getFærdigbehandlingerAfsluttet: sagID => {
-      query = `SELECT
-              brugerID,
-              brugerNavn,
-              timestampFærdigbehandletAfsluttet        
-              FROM view_sagerFærdigbehandletAfsluttet
+        getFærdigbehandlingerAfsluttet: sagID => {
+            query = `SELECT
+                brugerID,
+                brugerNavn,
+                BehandletTidspunkt
+              FROM vSagerFærdigbehandletAfsluttet
               WHERE sagID = '${sagID}'
-              ORDER BY timestampFærdigbehandletAfsluttet DESC
+              ORDER BY BehandletTidspunkt DESC
               `
 
-      return getData(query)
-    },
+            return getData(query)
+        },
 
-    getFærdigbehandlingerPåbegyndelsesdato: sagID => {
-      query = `SELECT
+        getFærdigbehandlingerPåbegyndelsesdato: sagID => {
+            query = `SELECT
               brugerID,
               brugerNavn,
-              timestampFærdigbehandletPåbegyndelsesdato
-              FROM view_sagerFærdigbehandletPåbegyndelsesdato
+              BehandletTidspunkt
+              FROM vSagerFærdigbehandletPåbegyndelse
               WHERE sagID = '${sagID}'
-              ORDER BY timestampFærdigbehandletPåbegyndelsesdato DESC
+              ORDER BY BehandletTidspunkt DESC
               `
 
-      return getData(query)
-    },
+            return getData(query)
+        },
 
 
-    execStoredProcedure: (procedure, params, output = null) => {
-      
-      return pool
-        .then(pool => {
-          const request = new sql.Request(pool)
+        execStoredProcedure: (procedure, params, output = null) => {
 
-          // Parametre
-          params.forEach(param => { request.input(param[0], param[1]) })
-          
-          // Output parameters
-          if (output)
-            request.output(output[0])
+            return pool
+                .then(pool => {
+                    const request = new sql.Request(pool)
 
-          return request.execute(procedure)
+                    // Parametre
+                    params.forEach(param => { request.input(param[0], param[1]) })
 
-        })
-        .catch(error => { console.log(error)})
-      
+                    // Output parameters
+                    if (output) {
+                        request.output(output[0])
+                    }
+
+                    fn.saving()
+
+                    var result = request.execute(procedure)
+
+                    fn.saveHighlight()
+                    return result
+
+                })
+                .catch(error => { console.log(error) })
+
+        }
+
     }
-    
-  }
 })()
 
 
 module.exports = {
-  DBCtrl
+    DBCtrl
 }
