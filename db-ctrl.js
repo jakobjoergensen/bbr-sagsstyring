@@ -108,7 +108,7 @@ const DBCtrl = (() => {
                     break
 
                 case 'alle':
-                    query = `EXEC søgAlleSager @søgeord = ${ID}`
+                    query = `EXEC spSøgAlleSager @søgeord = N'${ID}'`
                     break
 
                     // case 'påbegyndelsessager':
