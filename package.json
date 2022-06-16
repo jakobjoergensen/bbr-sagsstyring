@@ -23,7 +23,7 @@
         "truncate": "^2.0.1"
     },
     "devDependencies": {
-        "electron": "^2.0.3",
+        "electron": "^15.5.5",
         "electron-builder": "^20.28.1"
     },
     "build": {
